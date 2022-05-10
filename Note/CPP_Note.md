@@ -28,6 +28,71 @@ add_executable(my_proj ${SRC_FILE_PATH})  #设置可执行源文件编译成的�
 
 ## Map
 
+[C++ map用法总结](https://www.coonote.com/cplusplus-note/cpp-map-usage-summary.html)
+
+
+
+#### 构造函数
+
+```c++
+map<int, string> mapStudent;
+```
+
+
+
+#### 插入元素
+
+```c++
+// 第一种 用insert函數插入pair
+mapStudent.insert(pair<int, string>(000, "student_zero"));
+ 
+// 第二种 用insert函数插入value_type数据
+mapStudent.insert(map<int, string>::value_type(001, "student_one"));
+
+// 第三种 用"array"方式插入
+mapStudent[123] = "student_first";
+mapStudent[456] = "student_second";
+```
+
+第一种和第二种在效果上是完成一样的，
+
+用insert函数插入数据，在数据的插入上涉及到集合的**唯一性**这个概念，即当map中有这个关键字时，insert操作是不能再插入数据的，不同于数组可以覆盖以前该关键字对应的值：
+
+
+
+#### erase()
+
+```c++
+//迭代器刪除
+iter = mapStudent.find("123");
+mapStudent.erase(iter);
+ 
+//用关键字刪除
+int n = mapStudent.erase("123"); //如果刪除了會返回1，否則返回0
+ 
+//用迭代器范围刪除 : 把整个map清空
+mapStudent.erase(mapStudent.begin(), mapStudent.end());
+
+//等同于mapStudent.clear()
+mapStudent.clear()
+```
+
+
+
+
+
+#### find()
+
+```c++
+		auto it = m.find('e');
+    if ( it == m.end() ) {
+      cout<<"找不到元素";
+    } 
+    else {
+        // 找到元素
+    }
+```
+
 
 
 
