@@ -1,6 +1,12 @@
 
 
-# CMakeList
+# g++
+
+
+
+# CMake
+
+## CMakeList
 
 
 
@@ -27,6 +33,16 @@ add_executable(my_proj ${SRC_FILE_PATH})  #设置可执行源文件编译成的�
 
 
 # Lib
+
+C/C++静态库与动态库
+
+Clion下创建及调用静态库	https://www.cxymm.net/article/Phantom_matter/121082906
+
+Linux下创建及调用静态库	https://www.cnblogs.com/skynet/p/3372855.html
+
+
+
+
 
 
 

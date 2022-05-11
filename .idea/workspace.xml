@@ -11,19 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="636f0be6-e29c-4d22-8108-07bb90491206" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Materials/castro.head_10000.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Materials/castro.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Materials/tasks.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Materials/tasks.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Materials/vectoradd.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Note/CPP_Note.md" beforeDir="false" afterPath="$PROJECT_DIR$/Note/CPP_Note.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Note/CUDA.md" beforeDir="false" afterPath="$PROJECT_DIR$/Note/CUDA.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Note/images/image-20220511001303594.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Note/images/image-20220511003316828.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Note/images/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBAUGhhbnRvbV9tYXR0ZXI=,size_13,color_FFFFFF,t_70,g_se,x_16.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/test/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/test/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-    </list>
+    <list default="true" id="636f0be6-e29c-4d22-8108-07bb90491206" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -90,7 +78,7 @@
       <option name="presentableId" value="Default" />
       <updated>1652117874872</updated>
       <workItem from="1652117876054" duration="4972000" />
-      <workItem from="1652281470254" duration="3329000" />
+      <workItem from="1652281470254" duration="4005000" />
     </task>
     <servers />
   </component>
