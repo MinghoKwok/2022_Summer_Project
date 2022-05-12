@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: test
+# Project: test2
 # Configurations: Debug
 # =============================================================================
 
@@ -39,44 +39,44 @@ include CMakeFiles/rules.ninja
 #############################################
 # Logical path to working directory; prefix for absolute paths.
 
-cmake_ninja_workdir = /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/cmake-build-debug/
+cmake_ninja_workdir = /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target test
+# Object build statements for EXECUTABLE target test2
 
 
 #############################################
-# Order-only phony target for test
+# Order-only phony target for test2
 
-build cmake_object_order_depends_target_test: phony || CMakeFiles/test.dir
+build cmake_object_order_depends_target_test2: phony || CMakeFiles/test2.dir
 
-build CMakeFiles/test.dir/main.cpp.o: CXX_COMPILER__test_Debug /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/main.cpp || cmake_object_order_depends_target_test
-  DEP_FILE = CMakeFiles/test.dir/main.cpp.o.d
-  FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++14
-  OBJECT_DIR = CMakeFiles/test.dir
-  OBJECT_FILE_DIR = CMakeFiles/test.dir
+build CMakeFiles/test2.dir/src/main.cpp.o: CXX_COMPILER__test2_Debug /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2/src/main.cpp || cmake_object_order_depends_target_test2
+  DEP_FILE = CMakeFiles/test2.dir/src/main.cpp.o.d
+  FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++17
+  OBJECT_DIR = CMakeFiles/test2.dir
+  OBJECT_FILE_DIR = CMakeFiles/test2.dir/src
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target test
+# Link build statements for EXECUTABLE target test2
 
 
 #############################################
-# Link the executable test
+# Link the executable test2
 
-build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o
+build test2: CXX_EXECUTABLE_LINKER__test2_Debug CMakeFiles/test2.dir/src/main.cpp.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15
-  OBJECT_DIR = CMakeFiles/test.dir
+  OBJECT_DIR = CMakeFiles/test2.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_FILE = test
-  TARGET_PDB = test.dbg
+  TARGET_FILE = test2
+  TARGET_PDB = test2.dbg
 
 
 #############################################
 # Utility command for edit_cache
 
 build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+  COMMAND = cd /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
   DESC = No interactive CMake dialog available...
   restat = 1
 
@@ -87,7 +87,7 @@ build edit_cache: phony CMakeFiles/edit_cache.util
 # Utility command for rebuild_cache
 
 build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
-  COMMAND = cd /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/kwok/Documents/2022_Summer/2022_Summer_Project/test -B/Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/cmake-build-debug
+  COMMAND = cd /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2/cmake-build-debug && /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2 -B/Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2/cmake-build-debug
   DESC = Running CMake to regenerate build system...
   pool = console
   restat = 1
@@ -103,9 +103,9 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 
 #############################################
-# Folder: /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/cmake-build-debug
+# Folder: /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test2/cmake-build-debug
 
-build all: phony test
+build all: phony test2
 
 # =============================================================================
 # Built-in targets

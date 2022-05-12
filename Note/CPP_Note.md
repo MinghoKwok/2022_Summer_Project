@@ -8,6 +8,12 @@ https://blog.csdn.net/fengxuewei123/article/details/108424561
 
 # CMake
 
+
+
+CMake 学习笔记	https://juejin.cn/post/6844904015587704839
+
+
+
 ## CMakeList
 
 

@@ -32,7 +32,7 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 
 ![image-20220511193952565](images/image-20220511193952565.png)
 
-非注释部分属于源文件 vectorAdd.cu line 33 的汇编
+非注释部分属于源文件 vectorAdd.cu line 33 被翻译成的汇编
 
 ```
 /*0000*/                   MOV R1, c[0x0][0x28] ;
@@ -41,6 +41,8 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 ​	相对 function 地址的偏移量			gpu汇编
 
 ​	目标：通过 offset 查汇编
+
+​	
 
 # May 12
 
