@@ -49,11 +49,11 @@ cmake_ninja_workdir = /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test
 
 build cmake_object_order_depends_target_test: phony || CMakeFiles/test.dir
 
-build CMakeFiles/test.dir/main.cpp.o: CXX_COMPILER__test_Debug /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/main.cpp || cmake_object_order_depends_target_test
-  DEP_FILE = CMakeFiles/test.dir/main.cpp.o.d
+build CMakeFiles/test.dir/src/main.cpp.o: CXX_COMPILER__test_Debug /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/src/main.cpp || cmake_object_order_depends_target_test
+  DEP_FILE = CMakeFiles/test.dir/src/main.cpp.o.d
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++14
   OBJECT_DIR = CMakeFiles/test.dir
-  OBJECT_FILE_DIR = CMakeFiles/test.dir
+  OBJECT_FILE_DIR = CMakeFiles/test.dir/src
 
 
 # =============================================================================
@@ -63,7 +63,7 @@ build CMakeFiles/test.dir/main.cpp.o: CXX_COMPILER__test_Debug /Users/kwok/Docum
 #############################################
 # Link the executable test
 
-build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/main.cpp.o
+build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/src/main.cpp.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15
   OBJECT_DIR = CMakeFiles/test.dir
   POST_BUILD = :

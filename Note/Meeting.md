@@ -50,3 +50,11 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 
 ![image-20220511171239056](images/image-20220511171239056.png)
 
+
+
+进度：
+
+1. 建repo
+2. 熟悉 CLion , CMake, Lib 打包，file 读写解析
+3. 复盘学长录屏讲解
+4. 跑了几个基本的 project

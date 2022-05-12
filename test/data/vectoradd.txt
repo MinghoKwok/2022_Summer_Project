@@ -1,0 +1,88 @@
+	.headerflags	@"EF_CUDA_TEXMODE_UNIFIED EF_CUDA_64BIT_ADDRESS EF_CUDA_SM75 EF_CUDA_VIRTUAL_SM(EF_CUDA_SM75)"
+	.elftype	@"ET_EXEC"
+
+
+//--------------------- .text._Z9vectorAddPKfS0_Pfi --------------------------
+	.section	.text._Z9vectorAddPKfS0_Pfi,"ax",@progbits
+	.sectioninfo	@"SHI_REGISTERS=12"
+	.align	128
+                                                                                     // +------------------------+-----+
+                                                                                     // |          GPR           |PRED |
+                                                                                     // |  # 0 1 2 3 4 5 6 7 8 9 | # 0 |
+                                                                                     // +------------------------+-----+
+        .global         _Z9vectorAddPKfS0_Pfi                                        // |                        |     |
+        .type           _Z9vectorAddPKfS0_Pfi,@function                              // |                        |     |
+        .size           _Z9vectorAddPKfS0_Pfi,(.L_26 - _Z9vectorAddPKfS0_Pfi)        // |                        |     |
+        .other          _Z9vectorAddPKfS0_Pfi,@"STO_CUDA_ENTRY STV_DEFAULT"          // |                        |     |
+_Z9vectorAddPKfS0_Pfi:                                                               // |                        |     |
+.text._Z9vectorAddPKfS0_Pfi:                                                         // |                        |     |
+	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 33// +------------------------+-----+
+                                                                                     // Legend:
+                                                                                     //     ^       : Register assignment
+                                                                                     //     v       : Register usage
+                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     :       : Register in use
+                                                                                     //     <space> : Register not in use
+                                                                                     //     #       : Number of occupied registers
+
+        /*0000*/                   MOV R1, c[0x0][0x28] ;                            // |  1   ^                 |     |
+	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 35// +------------------------+-----+
+                                                                                     // Legend:
+                                                                                     //     ^       : Register assignment
+                                                                                     //     v       : Register usage
+                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     :       : Register in use
+                                                                                     //     <space> : Register not in use
+                                                                                     //     #       : Number of occupied registers
+
+        /*0010*/                   S2R R6, SR_CTAID.X ;                              // |  2   :         ^       |     |
+        /*0020*/                   S2R R3, SR_TID.X ;                                // |  3   :   ^     :       |     |
+        /*0030*/                   IMAD R6, R6, c[0x0][0x0], R3 ;                    // |  3   :   v     x       |     |
+	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 37// +------------------------+-----+
+                                                                                     // Legend:
+                                                                                     //     ^       : Register assignment
+                                                                                     //     v       : Register usage
+                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     :       : Register in use
+                                                                                     //     <space> : Register not in use
+                                                                                     //     #       : Number of occupied registers
+
+        /*0040*/                   ISETP.GE.AND P0, PT, R6, c[0x0][0x178], PT ;      // |  2   :         v       | 1 ^ |
+        /*0050*/               @P0 EXIT ;                                            // |  2   :         :       | 1 v |
+	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 39// +------------------------+-----+
+                                                                                     // Legend:
+                                                                                     //     ^       : Register assignment
+                                                                                     //     v       : Register usage
+                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     :       : Register in use
+                                                                                     //     <space> : Register not in use
+                                                                                     //     #       : Number of occupied registers
+
+        /*0060*/                   MOV R7, 0x4 ;                                     // |  3   :         : ^     |     |
+        /*0070*/                   IMAD.WIDE R4, R6, R7, c[0x0][0x168] ;             // |  5   :     ^ ^ v v     |     |
+        /*0080*/                   IMAD.WIDE R2, R6, R7, c[0x0][0x160] ;             // |  7   : ^ ^ : : v v     |     |
+        /*0090*/                   LDG.E.SYS R4, [R4] ;                              // |  7   : : : x v : :     |     |
+        /*00a0*/                   LDG.E.SYS R3, [R2] ;                              // |  6   : v x :   : :     |     |
+        /*00b0*/                   IMAD.WIDE R6, R6, R7, c[0x0][0x170] ;             // |  5   :   : :   x x     |     |
+        /*00c0*/                   FADD R9, R4, R3 ;                                 // |  6   :   v v   : :   ^ |     |
+        /*00d0*/                   STG.E.SYS [R6], R9 ;                              // |  4   :         v v   v |     |
+	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 41// +------------------------+-----+
+                                                                                     // Legend:
+                                                                                     //     ^       : Register assignment
+                                                                                     //     v       : Register usage
+                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     :       : Register in use
+                                                                                     //     <space> : Register not in use
+                                                                                     //     #       : Number of occupied registers
+
+        /*00e0*/                   EXIT ;                                            // |  1   :                 |     |
+.L_1:                                                                                // +........................+.....+
+        /*00f0*/                   BRA `(.L_1);                                      // |                        |     |
+.L_26:                                                                               // +------------------------+-----+
+                                                                                     // Legend:
+                                                                                     //     ^       : Register assignment
+                                                                                     //     v       : Register usage
+                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     :       : Register in use
+                                                                                     //     <space> : Register not in use
+                                                                                     //     #       : Number of occupied registers

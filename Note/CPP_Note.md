@@ -4,7 +4,11 @@
 
 https://blog.csdn.net/fengxuewei123/article/details/108424561
 
+-o：指定生成可执行文件的名称。
 
+-c：只编译不链接，只生成目标文件。
+
+-g：添加gdb调试选项。
 
 # CMake
 
