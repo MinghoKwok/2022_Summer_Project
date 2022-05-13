@@ -195,5 +195,5 @@ int main(void)
 
 # Binary
 
-
+怎样将C/C++程序编译成纯bin文件？https://bbs.csdn.net/topics/70143303
 

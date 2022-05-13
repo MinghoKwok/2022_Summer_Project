@@ -52,6 +52,12 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 
 
 
+
+
+binary文件
+
+
+
 进度：
 
 1. 建repo
