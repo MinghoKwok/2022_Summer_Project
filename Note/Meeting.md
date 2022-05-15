@@ -44,6 +44,12 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 
 ​	
 
+![image-20220515175906332](images/image-20220515175906332.png)
+
+GPR  通用寄存器 General Purpose Register
+
+
+
 # May 12
 
 提问：

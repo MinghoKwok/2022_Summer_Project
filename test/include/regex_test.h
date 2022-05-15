@@ -5,10 +5,12 @@
 #ifndef TEST_REGEX_TEST_H
 #define TEST_REGEX_TEST_H
 
+#include <regex>
+
 using namespace std;
 
-void getSrcFile(string reg);
-
+vector<string> getMatch(string reg, string inputStr);
+vector<string> getSearch(string reg, string inputStr);
 
 void regex_test();
 

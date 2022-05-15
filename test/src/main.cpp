@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include "../include/regex_test.h"
+#include <regex>
 
 using namespace std;
 
@@ -8,9 +9,31 @@ void mapOffset(string functionName);
 
 int main() {
 
-    //mapOffset("_Z9vectorAddPKfS0_Pfi");
-    getSrcFile("\t//## File \"(.*)\", line (.*)");
-    //regex_test();
+    mapOffset("_Z9vectorAddPKfS0_Pfi");
+
+//
+//
+//    // match src file and corresponding line
+//    vector<string> srcFile = getMatch("\t//## File \"(.*)\", line (.*)", "\t//## File \"/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu\", line 35");
+//    if (srcFile.size() != 0) {
+//        for (int i = 0; i < srcFile.size(); i++)
+//            cout << srcFile[i] << endl;
+//
+//        string fileName = srcFile[0];
+//        string fileLine = srcFile[1];
+//    }
+//
+//    // match offset and assembly code
+//    vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*) ; ", "        /*0030*/                   IMAD R6, R6, c[0x0][0x0], R3 ; ");
+//    if (offset_code.size() != 0) {
+//        for (int i = 0; i < offset_code.size(); i++)
+//            cout << offset_code[i] << endl;
+//
+//        string offset = offset_code[0];
+//        string code = offset_code[2];
+//    }
+//
+//
 
     return 0;
 }
@@ -32,6 +55,32 @@ void mapOffset(string functionName) {
 
     }
 
+    while (getline(myfile, tempStr)) {
+        // match src file and corresponding line
+        vector<string> srcFile = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
+        if (srcFile.size() != 0) {
+//            for (int i = 0; i < srcFile.size(); i++)
+//                cout << srcFile[i] << endl;
+
+            string fileName = srcFile[0];
+            string fileLine = srcFile[1];
+            cout << "Source File    Name: " << fileName << "       Line: " << fileLine << endl;
+        }
+
+        // match offset and assembly code
+        vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*); (.*)", tempStr);
+        if (offset_code.size() != 0) {
+//            for (int i = 0; i < offset_code.size(); i++)
+//                cout << offset_code[i] << endl;
+
+            string offset = offset_code[0];
+            string code = offset_code[2];
+            cout << "Offset: " << offset << "       Assembly Code: " << code << endl;
+        }
+    }
+
+    // string.find()   method
+    /*
     while (getline(myfile, tempStr)) {
         if (!begin) {
             auto pos_functionName = tempStr.find(functionName);
@@ -62,7 +111,7 @@ void mapOffset(string functionName) {
 
 
     }
-
+    */
 
     myfile.close();
     outfile.close();
