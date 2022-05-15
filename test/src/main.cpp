@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include "../include/regex_test.h"
 
 using namespace std;
 
@@ -8,6 +9,8 @@ void mapOffset(string functionName);
 int main() {
 
     //mapOffset("_Z9vectorAddPKfS0_Pfi");
+    getSrcFile("\t//## File \"(.*)\", line (.*)");
+    //regex_test();
 
     return 0;
 }
