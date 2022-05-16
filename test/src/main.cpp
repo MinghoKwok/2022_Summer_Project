@@ -1,7 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include "../include/regex_test.h"
 #include <regex>
+#include "../include/regex_test.h"
+#include "../include/VectorAdd.h"
 
 using namespace std;
 
@@ -11,34 +12,12 @@ int main() {
 
     mapOffset("_Z9vectorAddPKfS0_Pfi");
 
-//
-//
-//    // match src file and corresponding line
-//    vector<string> srcFile = getMatch("\t//## File \"(.*)\", line (.*)", "\t//## File \"/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu\", line 35");
-//    if (srcFile.size() != 0) {
-//        for (int i = 0; i < srcFile.size(); i++)
-//            cout << srcFile[i] << endl;
-//
-//        string fileName = srcFile[0];
-//        string fileLine = srcFile[1];
-//    }
-//
-//    // match offset and assembly code
-//    vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*) ; ", "        /*0030*/                   IMAD R6, R6, c[0x0][0x0], R3 ; ");
-//    if (offset_code.size() != 0) {
-//        for (int i = 0; i < offset_code.size(); i++)
-//            cout << offset_code[i] << endl;
-//
-//        string offset = offset_code[0];
-//        string code = offset_code[2];
-//    }
-//
-//
-
     return 0;
 }
 
 void mapOffset(string functionName) {
+    VectorAdd VA = VectorAdd(functionName);
+
     ifstream myfile ("../data/vectoradd.txt");
     ofstream outfile("../data/result2.txt");
     string tempStr;
@@ -55,6 +34,10 @@ void mapOffset(string functionName) {
 
     }
 
+
+    // Analyze line by line
+    string fileName;
+    string fileLine;
     while (getline(myfile, tempStr)) {
         // match src file and corresponding line
         vector<string> srcFile = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
@@ -62,9 +45,10 @@ void mapOffset(string functionName) {
 //            for (int i = 0; i < srcFile.size(); i++)
 //                cout << srcFile[i] << endl;
 
-            string fileName = srcFile[0];
-            string fileLine = srcFile[1];
-            cout << "Source File    Name: " << fileName << "       Line: " << fileLine << endl;
+            fileName = srcFile[0];
+            fileLine = srcFile[1];
+            //cout << "Source File    Name: " << fileName << "       Line: " << fileLine << endl;
+            VA.addSrcFile(fileName, fileLine);
         }
 
         // match offset and assembly code
@@ -75,9 +59,30 @@ void mapOffset(string functionName) {
 
             string offset = offset_code[0];
             string code = offset_code[2];
-            cout << "Offset: " << offset << "       Assembly Code: " << code << endl;
+            //cout << "Offset: " << offset << "       Assembly Code: " << code << endl;
+            VA.addOffsetSrc(offset, fileName, fileLine, code);
         }
     }
+
+
+    // Print source file and line
+    vector<string> srcFile = VA.getSrcFile();
+    for (int i = 0; i < srcFile.size(); i++)
+        cout << srcFile[i] << endl;
+    // Print mappings
+    vector<map<string, vector<string>>> offset_src = VA.getOffsetSrc();
+    for (int i = 0; i < offset_src.size(); i++) {
+        auto iter = offset_src[i].begin();
+        while (iter != offset_src[i].end()) {
+            cout << "Offset: " << iter->first << endl;
+
+            cout << "   Src File: " << iter->second[0] << "     Line: " << iter->second[1] << endl;
+            cout << "   Code: " << iter->second[2] << endl;
+
+            iter++;
+        }
+    }
+
 
     // string.find()   method
     /*

@@ -18,9 +18,9 @@ _Z9vectorAddPKfS0_Pfi:                                                          
 .text._Z9vectorAddPKfS0_Pfi:                                                         // |                        |     |
 	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 33// +------------------------+-----+
                                                                                      // Legend:
-                                                                                     //     ^       : Register assignment
-                                                                                     //     v       : Register usage
-                                                                                     //     x       : Register usage and reassignment
+                                                                                     //     ^       : Register assignment                   写
+                                                                                     //     v       : Register usage                        读
+                                                                                     //     x       : Register usage and reassignment       写+读
                                                                                      //     :       : Register in use
                                                                                      //     <space> : Register not in use
                                                                                      //     #       : Number of occupied registers

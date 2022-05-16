@@ -15,10 +15,18 @@ class VectorAdd {
 private:
     string funcName;
     vector<string> srcFile;
-    vector<map<string, vector<string>>> vec; // map: offset -> srcfile name, line
+    vector<map<string, vector<string>>> offset_src; // map: offset -> srcfile name, line, code
 public:
     VectorAdd();
     VectorAdd(string funcName);
+
+    void addSrcFile(string fileName, string fileLine);
+    vector<string> getSrcFile();
+
+    void addOffsetSrc(string offset, string fileName, string line, string code);
+    vector<map<string, vector<string>>> getOffsetSrc();
+
+    vector<string> searchOffset(string offset);
 };
 
 

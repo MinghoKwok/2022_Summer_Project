@@ -193,7 +193,39 @@ int main(void)
 
 
 
-# Binary
+# Regex
 
-怎样将C/C++程序编译成纯bin文件？https://bbs.csdn.net/topics/70143303
+
+
+[C++—正则表达式](https://segmentfault.com/a/1190000040640339)
+
+C++正则表达式（regex_match、regex_search与regex_replace）https://blog.csdn.net/qq_34802416/article/details/79307102
+
+C++正则表达式提取匹配到的字符串 https://blog.csdn.net/u010339647/article/details/78131355
+
+正则表达式需要转义的特殊字符 https://blog.csdn.net/lvshubao1314/article/details/51222978
+
+正则表达式在线测试 https://c.runoob.com/front-end/854/
+
+
+
+
+
+# File
+
+C++中Txt文件读取和写入(方法汇总) https://blog.csdn.net/lz20120808/article/details/49622787
+
+
+
+
+
+# 引用 &
+
+C++ 引用  https://www.runoob.com/cplusplus/cpp-references.html
+
+引用变量是一个别名，也就是说，它是某个已存在变量的另一个名字。一旦把引用初始化为某个变量，就可以使用该引用名称或变量名称来指向变量。
+
+
+
+C++ 把引用作为参数https://www.runoob.com/cplusplus/passing-parameters-by-references.html
 

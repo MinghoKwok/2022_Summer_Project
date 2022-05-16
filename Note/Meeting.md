@@ -24,7 +24,7 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 
 ### 汇编行
 
-
+#### 任务1
 
  ![image-20220511181531958](images/image-20220511182106334.png)function name, 可作为解析时识别标准
 
@@ -44,9 +44,19 @@ https://zhuanlan.zhihu.com/p/143858869	Cuda kernel
 
 ​	
 
+#### 	任务 2
+
 ![image-20220515175906332](images/image-20220515175906332.png)
 
-GPR  通用寄存器 General Purpose Register
+GPR  通用寄存器 General Purpose Register 	0 - 9 是寄存器序号
+
+一个 Pred 寄存器
+
+
+
+![image-20220515184249916](images/image-20220515184249916.png)
+
+
 
 
 
