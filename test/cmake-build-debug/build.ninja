@@ -67,12 +67,6 @@ build CMakeFiles/test.dir/src/VectorAdd.cpp.o: CXX_COMPILER__test_Debug /Users/k
   OBJECT_DIR = CMakeFiles/test.dir
   OBJECT_FILE_DIR = CMakeFiles/test.dir/src
 
-build CMakeFiles/test.dir/include/Circle.cpp.o: CXX_COMPILER__test_Debug /Users/kwok/Documents/2022_Summer/2022_Summer_Project/test/include/Circle.cpp || cmake_object_order_depends_target_test
-  DEP_FILE = CMakeFiles/test.dir/include/Circle.cpp.o.d
-  FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15 -std=gnu++14
-  OBJECT_DIR = CMakeFiles/test.dir
-  OBJECT_FILE_DIR = CMakeFiles/test.dir/include
-
 
 # =============================================================================
 # Link build statements for EXECUTABLE target test
@@ -81,7 +75,7 @@ build CMakeFiles/test.dir/include/Circle.cpp.o: CXX_COMPILER__test_Debug /Users/
 #############################################
 # Link the executable test
 
-build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/src/main.cpp.o CMakeFiles/test.dir/src/regex_test.cpp.o CMakeFiles/test.dir/src/VectorAdd.cpp.o CMakeFiles/test.dir/include/Circle.cpp.o
+build test: CXX_EXECUTABLE_LINKER__test_Debug CMakeFiles/test.dir/src/main.cpp.o CMakeFiles/test.dir/src/regex_test.cpp.o CMakeFiles/test.dir/src/VectorAdd.cpp.o
   FLAGS = -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -mmacosx-version-min=10.15
   OBJECT_DIR = CMakeFiles/test.dir
   POST_BUILD = :

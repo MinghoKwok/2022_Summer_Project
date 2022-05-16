@@ -66,22 +66,17 @@ void mapOffset(string functionName) {
 
 
     // Print source file and line
-    vector<string> srcFile = VA.getSrcFile();
-    for (int i = 0; i < srcFile.size(); i++)
-        cout << srcFile[i] << endl;
+    VA.printSrcFile();
+
+    cout << endl << endl;
+
     // Print mappings
-    vector<map<string, vector<string>>> offset_src = VA.getOffsetSrc();
-    for (int i = 0; i < offset_src.size(); i++) {
-        auto iter = offset_src[i].begin();
-        while (iter != offset_src[i].end()) {
-            cout << "Offset: " << iter->first << endl;
+    VA.printOffset();
 
-            cout << "   Src File: " << iter->second[0] << "     Line: " << iter->second[1] << endl;
-            cout << "   Code: " << iter->second[2] << endl;
+    cout << endl << endl;
 
-            iter++;
-        }
-    }
+    // Test search offset
+    vector<string> offset_res = VA.searchOffset("0040");
 
 
     // string.find()   method

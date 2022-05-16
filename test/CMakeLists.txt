@@ -3,4 +3,4 @@ project(test)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(test src/main.cpp include/regex_test.h src/regex_test.cpp src/VectorAdd.cpp include/VectorAdd.h include/Circle.cpp include/Circle.h)
+add_executable(test src/main.cpp include/regex_test.h src/regex_test.cpp src/VectorAdd.cpp include/VectorAdd.h)
