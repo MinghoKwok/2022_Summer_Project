@@ -36,33 +36,33 @@ void mapOffset(string functionName) {
 
 
     // Analyze line by line
-    string fileName;
+    string filePath;
     string fileLine;
     while (getline(myfile, tempStr)) {
         // match src file and corresponding line
         vector<string> srcFile = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
         if (srcFile.size() != 0) {
 
-            fileName = srcFile[0];
+            filePath = srcFile[0];
             fileLine = srcFile[1];
-            //cout << "Source File    Name: " << fileName << "       Line: " << fileLine << endl;
-            VA.addSrcFile(fileName, fileLine);
+            //cout << "Source File    Name: " << filePath << "       Line: " << fileLine << endl;
+            VA.addSrcFile(filePath, fileLine);
         }
 
         // match offset and assembly code
         vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*); (.*)", tempStr);
         if (offset_code.size() != 0) {
 
-            string offset = offset_code[0];
+            int offset = atoi(offset_code[0].c_str());
             string code = offset_code[2];
             //cout << "Offset: " << offset << "       Assembly Code: " << code << endl;
-            VA.addOffsetSrc(offset, fileName, fileLine, code);
+            VA.addOffsetSrc(offset, filePath, fileLine, code);
         }
     }
 
 
     // Print source file and line
-    //VA.printSrcFile();
+    VA.printSrcFile();
 
     cout << endl << endl;
 
@@ -72,7 +72,7 @@ void mapOffset(string functionName) {
     cout << endl << endl;
 
     // Test search offset
-    vector<string> offset_res = VA.searchOffset("0020");
+    OffsetInfo offset_res = VA.searchOffset(20);
 
 
     // string.find()   method

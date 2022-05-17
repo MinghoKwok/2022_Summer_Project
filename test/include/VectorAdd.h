@@ -7,28 +7,30 @@
 
 #include <string>
 #include <map>
+#include <set>
 #include <vector>
+#include "OffsetInfo.h"
 
 using namespace std;
 
 class VectorAdd {
 private:
     string funcName;
-    vector<string> srcFile; //换成 set  path
-    map<string, vector<string>> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
+    set<string> srcFile; //换成 set  path
+    map<int, struct OffsetInfo> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
     //汇编code 全部放进一个vector  index索引
     // vector -> struct
 public:
     VectorAdd();
     VectorAdd(string funcName);
 
-    void addSrcFile(string fileName, string fileLine);
-    vector<string> getSrcFile();
+    void addSrcFile(string filePath, string fileLine);
+    set<string> getSrcFile();
 
-    void addOffsetSrc(string offset, string fileName, string line, string code);
-    map<string, vector<string>> getOffsetSrc();
+    void addOffsetSrc(int offset, string filePath, string line, string code);
+    map<int, struct OffsetInfo> getOffsetSrc();
 
-    vector<string> searchOffset(string offset);
+    OffsetInfo searchOffset(int offset);
 
     void printSrcFile();
     void printOffset();

@@ -7,62 +7,62 @@ VectorAdd::VectorAdd() {
 
 VectorAdd::VectorAdd(string funcName) {
     this->funcName = funcName;
-    vector<string> vec;
+    set<string> vec;
     this->srcFile = vec;
 }
 
 
-void VectorAdd::addSrcFile(string fileName, string fileLine) {
-    this->srcFile.push_back(fileName.append("     Line: ").append(fileLine));
+void VectorAdd::addSrcFile(string filePath, string fileLine) {
+    //this->srcFile.insert(filePath.append("     Line: ").append(fileLine));
+    this->srcFile.insert(filePath);
 }
 
-vector<string> VectorAdd::getSrcFile() {
+set<string> VectorAdd::getSrcFile() {
     return this->srcFile;
 }
 
 
-void VectorAdd::addOffsetSrc(string offset, string fileName, string line, string code) {
-    vector<string> vec;
-    vec.push_back(fileName);
-    vec.push_back(line);
-    vec.push_back(code);
+void VectorAdd::addOffsetSrc(int offset, string filePath, string line, string code) {
 
-    map<string, vector<string>> tempMap;
+    OffsetInfo offset_info;
+    offset_info.src_path = this->srcFile.find(filePath);
+    offset_info.src_line = line;
+    offset_info.code = code;
 
-    this->map_offset_src.insert(pair<string, vector<string>>(offset, vec));
+    this->map_offset_src.insert(pair<int, struct OffsetInfo>(offset, offset_info));
 }
 
-map<string, vector<string>> VectorAdd::getOffsetSrc() {
+map<int, struct OffsetInfo> VectorAdd::getOffsetSrc() {
     return this->map_offset_src;
 }
 
 
-vector<string> VectorAdd::searchOffset(string offset) {
+OffsetInfo VectorAdd::searchOffset(int offset) {
     auto iter = this->map_offset_src.find(offset);
     if (iter == map_offset_src.end()) {
-        vector<string> vec;
-        return vec;
+        OffsetInfo emptyOI;
+        return emptyOI;
     } else {
         cout << "Offset: " << offset << endl;
-        cout << "Src File Name: " << iter->second[0] << "   Line " << iter->second[1] << endl << "Code: " << iter->second[2] << endl;
+        cout << "Src File Path: " << *iter->second.src_path << "   Line " << iter->second.src_line << endl << "Code: " << iter->second.code << endl;
         return iter->second;
     }
 
 }
 
 void VectorAdd::printSrcFile() {
-    for (int i = 0; i < this->srcFile.size(); i++)
-        cout << this->srcFile[i] << endl;
+    for (auto i = this->srcFile.begin(); i != this->srcFile.end(); i++)
+        cout << *i << endl;
 }
 
-void VectorAdd::printOffset() {
-    map<string, vector<string>> offset_src = this->getOffsetSrc();
-    auto iter = offset_src.begin();
-    while (iter != offset_src.end()) {
-        cout << "Offset: " << iter->first << endl;
-        cout << "   Src File: " << iter->second[0] << "     Line: " << iter->second[1] << endl;
-        cout << "   Code: " << iter->second[2] << endl;
-
-        iter++;
-    }
-}
+//void VectorAdd::printOffset() {
+//    map<string, vector<string>> offset_src = this->getOffsetSrc();
+//    auto iter = offset_src.begin();
+//    while (iter != offset_src.end()) {
+//        cout << "Offset: " << iter->first << endl;
+//        cout << "   Src File: " << iter->second[0] << "     Line: " << iter->second[1] << endl;
+//        cout << "   Code: " << iter->second[2] << endl;
+//
+//        iter++;
+//    }
+//}

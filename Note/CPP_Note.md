@@ -185,6 +185,38 @@ int main(void)
 
 
 
+
+
+## Set
+
+
+
+```c++
+	set<int> s1;
+ 
+    //插入元素的函数
+     //在set容器中
+    s1.insert(1);
+    s1.insert(4);
+    s1.insert(2);
+    s1.insert(5);
+    s1.insert(3);
+ 
+    cout << "set1中的元素是: ";
+    for (auto it = s1.begin(); it != s1.end(); it++)
+        cout << *it << " ";
+```
+
+
+
+
+
+### insert
+
+
+
+
+
 # JSON
 
 

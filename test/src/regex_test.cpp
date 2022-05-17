@@ -44,10 +44,10 @@ vector<string> getSearch(string reg, string inputStr) {
 
 void regex_test() {
 
-    string filename("789.123.456");
+    string filePath("789.123.456");
     regex pattern("(.*)\\.123\\.456");
 
-    // filename 是否匹配 pattern
-    bool matched = std::regex_match(filename, pattern);
+    // filePath 是否匹配 pattern
+    bool matched = std::regex_match(filePath, pattern);
     cout << boolalpha << matched;            // true
 }
