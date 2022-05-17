@@ -14,8 +14,10 @@ using namespace std;
 class VectorAdd {
 private:
     string funcName;
-    vector<string> srcFile;
-    map<string, vector<string>> map_offset_src; // map: offset -> srcfile name, line, code
+    vector<string> srcFile; //换成 set  path
+    map<string, vector<string>> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
+    //汇编code 全部放进一个vector  index索引
+    // vector -> struct
 public:
     VectorAdd();
     VectorAdd(string funcName);

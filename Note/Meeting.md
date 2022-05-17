@@ -80,3 +80,16 @@ binary文件
 2. 熟悉 CLion , CMake, Lib 打包，file 读写解析
 3. 复盘学长录屏讲解
 4. 跑了几个基本的 project
+
+
+
+
+
+
+
+
+
+class name 类名改
+
+偏移量 int
+
