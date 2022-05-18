@@ -2,7 +2,7 @@
 #include <fstream>
 #include <regex>
 #include "../include/regex_test.h"
-#include "../include/VectorAdd.h"
+#include "../include/FuncInfo.h"
 
 using namespace std;
 
@@ -16,7 +16,7 @@ int main() {
 }
 
 void mapOffset(string functionName) {
-    VectorAdd VA = VectorAdd(functionName);
+    FuncInfo VA = FuncInfo(functionName);
 
     ifstream myfile ("../data/vectoradd.txt");
     ofstream outfile("../data/result2.txt");

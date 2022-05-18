@@ -8,7 +8,7 @@ using namespace std;
 struct OffsetInfo{
     set<string>::iterator src_path;
     string src_line;
-    string code;
+    set<string>::iterator code;
 };
 
 #endif //TEST_OFFSETINFO_H

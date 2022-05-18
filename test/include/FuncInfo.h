@@ -2,8 +2,8 @@
 // Created by Minghao Guo on 2022/5/14.
 //
 
-#ifndef TEST_VECTORADD_H
-#define TEST_VECTORADD_H
+#ifndef TEST_FUNCINFO_H
+#define TEST_FUNCINFO_H
 
 #include <string>
 #include <map>
@@ -13,16 +13,17 @@
 
 using namespace std;
 
-class VectorAdd {
+class FuncInfo {
 private:
     string funcName;
     set<string> srcFile; //换成 set  path
+    set<string> codeSet;
     map<int, struct OffsetInfo> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
     //汇编code 全部放进一个vector  index索引
     // vector -> struct
 public:
-    VectorAdd();
-    VectorAdd(string funcName);
+    FuncInfo();
+    FuncInfo(string funcName);
 
     void addSrcFile(string filePath, string fileLine);
     set<string> getSrcFile();
@@ -37,4 +38,4 @@ public:
 };
 
 
-#endif //TEST_VECTORADD_H
+#endif //TEST_FUNCINFO_H

@@ -185,6 +185,17 @@ int main(void)
 
 
 
+### sort
+
+```c++
+sort(begin(v), end(v));
+sort(v.begin(), v.end());
+```
+
+
+
+
+
 
 
 ## Set
@@ -209,11 +220,29 @@ int main(void)
 
 
 
+C++ STL中的set、指针数组和数组指针 https://blog.csdn.net/qq_20853741/article/details/115707667
+
+
+
 
 
 ### insert
 
 
+
+### find
+
+https://www.cainiaojc.com/cpp/cpp-set-find-function.html
+
+
+
+## for auto 与 iterator 使用的区别
+
+https://blog.csdn.net/Primeprime/article/details/105270463
+
+```c++
+std::set<int>::iterator iter = myset.begin()
+```
 
 
 
