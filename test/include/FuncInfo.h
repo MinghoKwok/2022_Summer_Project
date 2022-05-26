@@ -16,11 +16,10 @@ using namespace std;
 class FuncInfo {
 private:
     string funcName;
-    set<string> srcFile; //换成 set  path
+    set<string> srcFileSet; //换成 set  path
     set<string> codeSet;
     map<int, struct OffsetInfo> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
-    //汇编code 全部放进一个vector  index索引
-    // vector -> struct
+
 public:
     FuncInfo();
     FuncInfo(string funcName);

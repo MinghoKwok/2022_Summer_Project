@@ -3,22 +3,23 @@
 #include <regex>
 #include "../include/regex_test.h"
 #include "../include/FuncInfo.h"
+#include "../include/helpFunc.h"
 
 using namespace std;
 
-void mapOffset(string functionName);
+void mapOffset(string functionName, string dataPath);
 
 int main() {
 
-    mapOffset("_Z9vectorAddPKfS0_Pfi");
+    mapOffset("_Z9vectorAddPKfS0_Pfi", "../data/vectoradd.txt");
 
     return 0;
 }
 
-void mapOffset(string functionName) {
-    FuncInfo VA = FuncInfo(functionName);
+void mapOffset(string functionName, string dataPath) {
 
-    ifstream myfile ("../data/vectoradd.txt");
+
+    ifstream myfile (dataPath);
     ofstream outfile("../data/result2.txt");
     string tempStr;
     bool begin = false; //identified function name， assembly part begin
@@ -34,6 +35,8 @@ void mapOffset(string functionName) {
 
     }
 
+
+    FuncInfo VA = FuncInfo(functionName);
 
     // Analyze line by line
     string filePath;
@@ -53,7 +56,7 @@ void mapOffset(string functionName) {
         vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*); (.*)", tempStr);
         if (offset_code.size() != 0) {
 
-            int offset = atoi(offset_code[0].c_str());
+            int offset = hexToInt(offset_code[0]);
             string code = offset_code[2];
             //cout << "Offset: " << offset << "       Assembly Code: " << code << endl;
             VA.addOffsetSrc(offset, filePath, fileLine, code);
@@ -62,17 +65,17 @@ void mapOffset(string functionName) {
 
 
     // Print source file and line
-    VA.printSrcFile();
+    //VA.printSrcFile();
 
-    cout << endl << endl;
+    //cout << endl << endl;
 
     // Print mappings
     //VA.printOffset();
 
-    cout << endl << endl;
+    //cout << endl << endl;
 
     // Test search offset
-    OffsetInfo offset_res = VA.searchOffset(20);
+    OffsetInfo offset_res = VA.searchOffset(48);
 
 
     // string.find()   method

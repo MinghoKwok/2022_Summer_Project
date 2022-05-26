@@ -7,28 +7,26 @@ FuncInfo::FuncInfo() {
 
 FuncInfo::FuncInfo(string funcName) {
     this->funcName = funcName;
-    set<string> vec;
-    this->srcFile = vec;
 }
 
 
 void FuncInfo::addSrcFile(string filePath, string fileLine) {
-    //this->srcFile.insert(filePath.append("     Line: ").append(fileLine));
-    this->srcFile.insert(filePath);
+    //this->srcFileSet.insert(filePath.append("     Line: ").append(fileLine));
+    this->srcFileSet.insert(filePath);
 }
 
 set<string> FuncInfo::getSrcFile() {
-    return this->srcFile;
+    return this->srcFileSet;
 }
 
 
 void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code) {
 
-    this->codeSet.insert(code);
+    this->codeSet.insert(code); // 找找直接返回指针的set 函数
 
     OffsetInfo offset_info;
-    offset_info.src_path = this->srcFile.find(filePath);
-    offset_info.src_line = line;
+    offset_info.src_path = this->srcFileSet.find(filePath);
+    offset_info.src_line = atoi(line.c_str());
     offset_info.code = this->codeSet.find(code);
 
     this->map_offset_src.insert(pair<int, struct OffsetInfo>(offset, offset_info));
@@ -53,18 +51,18 @@ OffsetInfo FuncInfo::searchOffset(int offset) {
 }
 
 void FuncInfo::printSrcFile() {
-    for (auto i = this->srcFile.begin(); i != this->srcFile.end(); i++)
+    for (auto i = this->srcFileSet.begin(); i != this->srcFileSet.end(); i++)
         cout << *i << endl;
 }
 
-//void FuncInfo::printOffset() {
-//    map<string, vector<string>> offset_src = this->getOffsetSrc();
-//    auto iter = offset_src.begin();
-//    while (iter != offset_src.end()) {
-//        cout << "Offset: " << iter->first << endl;
-//        cout << "   Src File: " << iter->second[0] << "     Line: " << iter->second[1] << endl;
-//        cout << "   Code: " << iter->second[2] << endl;
-//
-//        iter++;
-//    }
-//}
+void FuncInfo::printOffset() {
+    map<int, struct OffsetInfo> offset_src = this->getOffsetSrc();
+    auto iter = offset_src.begin();
+    while (iter != offset_src.end()) {
+        cout << "Offset: " << iter->first << endl;
+        cout << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << endl;
+        cout << "   Code: " << *iter->second.code << endl;
+
+        iter++;
+    }
+}
