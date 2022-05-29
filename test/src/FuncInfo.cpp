@@ -1,15 +1,52 @@
 #include "../include/FuncInfo.h"
 #include <iostream>
+#include <fstream>
 
 FuncInfo::FuncInfo() {
-    this->funcName = "_Z9vectorAddPKfS0_Pfi";
+    this->funcName = "";
 }
 
 FuncInfo::FuncInfo(string funcName) {
     this->funcName = funcName;
 }
 
+FuncInfo::FuncInfo(const FuncInfo &obj) {
+    this->funcName = obj.funcName;
+//
+//    this->srcFileSet = obj.srcFileSet;  //STL中的容器直接赋值是安全的，即是深拷贝; vec1 = vec2,赋值之后，vec1和vec2之间就没有关联了
+//
+//    this->codeSet = obj.codeSet;
+//
+//    this->map_offset_src = obj.map_offset_src;
 
+    copy(obj.srcFileSet.begin(),obj.srcFileSet.end(),inserter(this->srcFileSet,this->srcFileSet.begin()));
+    copy(obj.codeSet.begin(),obj.codeSet.end(),inserter(this->codeSet,this->codeSet.begin()));
+    copy(obj.map_offset_src.begin(),obj.map_offset_src.end(),inserter(this->map_offset_src,this->map_offset_src.begin()));
+}
+
+FuncInfo::~FuncInfo() {
+
+}
+
+// Clear
+void FuncInfo::clear() {
+    this->funcName = "";
+    this->srcFileSet.clear();
+    this->codeSet.clear();
+    this->map_offset_src.clear();
+}
+
+
+// Function Name
+void FuncInfo::setFuncName(string funcName) {
+    this->funcName = funcName;
+}
+
+string FuncInfo::getFuncName() {
+    return this->funcName;
+}
+
+// Src File
 void FuncInfo::addSrcFile(string filePath, string fileLine) {
     //this->srcFileSet.insert(filePath.append("     Line: ").append(fileLine));
     this->srcFileSet.insert(filePath);
@@ -19,10 +56,9 @@ set<string> FuncInfo::getSrcFile() {
     return this->srcFileSet;
 }
 
-
 void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code) {
 
-    this->codeSet.insert(code); // 找找直接返回指针的set 函数
+    this->codeSet.insert(code); // 找找直接返回指针的 set 函数
 
     OffsetInfo offset_info;
     offset_info.src_path = this->srcFileSet.find(filePath);
@@ -50,19 +86,29 @@ OffsetInfo FuncInfo::searchOffset(int offset) {
 
 }
 
+
+// Print
 void FuncInfo::printSrcFile() {
     for (auto i = this->srcFileSet.begin(); i != this->srcFileSet.end(); i++)
         cout << *i << endl;
 }
 
 void FuncInfo::printOffset() {
-    map<int, struct OffsetInfo> offset_src = this->getOffsetSrc();
-    auto iter = offset_src.begin();
-    while (iter != offset_src.end()) {
+    ofstream outfile("../data/printOffset_" + this->funcName + ".txt");
+
+    //map<int, struct OffsetInfo> offset_src = this->getOffsetSrc();
+    auto iter = this->map_offset_src.begin();
+    while (iter != this->map_offset_src.end()) {
         cout << "Offset: " << iter->first << endl;
         cout << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << endl;
         cout << "   Code: " << *iter->second.code << endl;
 
+//        outfile << "Offset: " << iter->first << "\n";
+//        outfile << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << "\n";
+//        outfile << "   Code: " << *iter->second.code << "\n";
+
         iter++;
     }
+
+    outfile.close();
 }

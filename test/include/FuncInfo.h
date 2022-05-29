@@ -23,15 +23,28 @@ private:
 public:
     FuncInfo();
     FuncInfo(string funcName);
+    FuncInfo(const FuncInfo &obj);  //必须显式地定义才能完成深拷贝
+    ~FuncInfo(void);
 
+    // clear
+    void clear();
+
+    // function name
+    void setFuncName(string funcName);
+    string getFuncName();
+
+    // SrcFile
     void addSrcFile(string filePath, string fileLine);
     set<string> getSrcFile();
 
+    // map offset and filePath, line, code
     void addOffsetSrc(int offset, string filePath, string line, string code);
     map<int, struct OffsetInfo> getOffsetSrc();
 
     OffsetInfo searchOffset(int offset);
 
+
+    // Print
     void printSrcFile();
     void printOffset();
 };

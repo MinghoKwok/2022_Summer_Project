@@ -101,7 +101,8 @@
 				1,
 				4,
 				5,
-				6
+				6,
+				8
 			]
 		}
 	],
@@ -150,6 +151,11 @@
 			"compileGroupIndex" : 0,
 			"path" : "src/helpFunc.cpp",
 			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "include/Register.h",
+			"sourceGroupIndex" : 1
 		}
 	],
 	"type" : "EXECUTABLE"
