@@ -40,6 +40,7 @@ void FuncInfo::clear() {
 // Function Name
 void FuncInfo::setFuncName(string funcName) {
     this->funcName = funcName;
+    //this->srcFileSet.insert("no src file");
 }
 
 string FuncInfo::getFuncName() {
@@ -62,6 +63,8 @@ void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string cod
 
     OffsetInfo offset_info;
     offset_info.src_path = this->srcFileSet.find(filePath);
+
+
     offset_info.src_line = atoi(line.c_str());
     offset_info.code = this->codeSet.find(code);
 
@@ -80,7 +83,8 @@ OffsetInfo FuncInfo::searchOffset(int offset) {
         return emptyOI;
     } else {
         cout << "Offset: " << offset << endl;
-        cout << "Src File Path: " << *iter->second.src_path << "   Line " << iter->second.src_line << endl << "Code: " << *iter->second.code << endl;
+        cout << "Src File Path: " << *iter->second.src_path << "   Line " << iter->second.src_line << endl;
+        cout << "Code: " << *iter->second.code << endl;
         return iter->second;
     }
 
@@ -94,21 +98,28 @@ void FuncInfo::printSrcFile() {
 }
 
 void FuncInfo::printOffset() {
-    ofstream outfile("../data/printOffset_" + this->funcName + ".txt");
+//    string s1("../data/printOffset_"), s2(this->funcName), s3(".txt");
+//    ofstream outfile("../data/printOffset_");
+//    if(!outfile){
+//        cout << "Unable to open outfile";
+//        exit(1); // terminate with error
+//    }
 
     //map<int, struct OffsetInfo> offset_src = this->getOffsetSrc();
     auto iter = this->map_offset_src.begin();
     while (iter != this->map_offset_src.end()) {
+        //cout << this->funcName << endl;
         cout << "Offset: " << iter->first << endl;
         cout << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << endl;
-        cout << "   Code: " << *iter->second.code << endl;
+        cout << "   Code: " << *iter->second.code << endl << endl;
 
+//        outfile << this->funcName << "\n";
 //        outfile << "Offset: " << iter->first << "\n";
 //        outfile << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << "\n";
-//        outfile << "   Code: " << *iter->second.code << "\n";
+//        outfile << "   Code: " << *iter->second.code << "\n" << "\n";
 
         iter++;
     }
 
-    outfile.close();
+//    outfile.close();
 }

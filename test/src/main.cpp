@@ -43,8 +43,8 @@ void mapOffset(string dataPath) {
     map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map
     vector<FuncInfo> vec_FuncInfos;
 
-    string filePath;
-    string fileLine;
+    string filePath = "no src file";
+    string fileLine = "-1";
     while (getline(myfile, tempStr)) {
         // match function name
         vector<string> function_name = getMatch("//-+ \\.text\\.(.*) -+", tempStr);
@@ -54,7 +54,9 @@ void mapOffset(string dataPath) {
 
             FuncInfo tempObj(function_name[0]);
             FI = &tempObj;
-
+            filePath = "no src file";
+            fileLine = "-1";
+            //FI->addSrcFile(filePath, fileLine);
 
             //map_FuncInfos.insert(pair<string, FuncInfo>(tempObj.getFuncName(), tempObj));
 
@@ -71,7 +73,7 @@ void mapOffset(string dataPath) {
 
         // match src file and corresponding line
         vector<string> src_file = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
-        if (src_file.size() != 0) {
+        if (!src_file.empty()) {
 
             filePath = src_file[0];
             fileLine = src_file[1];
@@ -81,7 +83,8 @@ void mapOffset(string dataPath) {
 
         // match offset and assembly code
         vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*); (.*)", tempStr);
-        if (offset_code.size() != 0) {
+        if (!offset_code.empty()) {
+            FI->addSrcFile(filePath, fileLine);     //解决没有源文件情形，不知道为什么加在前面会报139错
 
             int offset = hexToInt(offset_code[0]);
             string code = offset_code[2];
@@ -117,7 +120,7 @@ void mapOffset(string dataPath) {
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
         vec_FuncInfos[i].printSrcFile();
         vec_FuncInfos[i].printOffset();
-        vec_FuncInfos[i].searchOffset(0);
+        //vec_FuncInfos[i].searchOffset(0);
     }
 
 
