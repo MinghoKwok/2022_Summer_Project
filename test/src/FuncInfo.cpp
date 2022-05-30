@@ -10,32 +10,6 @@ FuncInfo::FuncInfo(string funcName) {
     this->funcName = funcName;
 }
 
-FuncInfo::FuncInfo(const FuncInfo &obj) {
-    this->funcName = obj.funcName;
-//
-//    this->srcFileSet = obj.srcFileSet;  //STL中的容器直接赋值是安全的，即是深拷贝; vec1 = vec2,赋值之后，vec1和vec2之间就没有关联了
-//
-//    this->codeSet = obj.codeSet;
-//
-//    this->map_offset_src = obj.map_offset_src;
-
-    copy(obj.srcFileSet.begin(),obj.srcFileSet.end(),inserter(this->srcFileSet,this->srcFileSet.begin()));
-    copy(obj.codeSet.begin(),obj.codeSet.end(),inserter(this->codeSet,this->codeSet.begin()));
-    copy(obj.map_offset_src.begin(),obj.map_offset_src.end(),inserter(this->map_offset_src,this->map_offset_src.begin()));
-}
-
-FuncInfo::~FuncInfo() {
-
-}
-
-// Clear
-void FuncInfo::clear() {
-    this->funcName = "";
-    this->srcFileSet.clear();
-    this->codeSet.clear();
-    this->map_offset_src.clear();
-}
-
 
 // Function Name
 void FuncInfo::setFuncName(string funcName) {
@@ -57,7 +31,7 @@ set<string> FuncInfo::getSrcFile() {
     return this->srcFileSet;
 }
 
-void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code) {
+void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code, Register reg_GPR) {
 
     this->codeSet.insert(code); // 找找直接返回指针的 set 函数
 
@@ -89,6 +63,29 @@ OffsetInfo FuncInfo::searchOffset(int offset) {
     }
 
 }
+
+
+
+
+
+// set Register
+void FuncInfo::setRegister(string regName, int regSize) {
+    if (regName == "GPR") {
+        this->reg_GPR_size = regSize;
+    } else if (regName == "PRED"){
+        this->reg_PRED_size = regSize;
+    } else if (regName == "UGPR"){
+        this->reg_UGPR_size = regSize;
+    } else if (regName == "UPRED"){
+        this->reg_UPRED_size = regSize;
+    } else {
+        cout << "No Such Register" << endl;
+    }
+}
+
+
+
+
 
 
 // Print

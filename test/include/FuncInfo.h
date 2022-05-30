@@ -20,14 +20,14 @@ private:
     set<string> codeSet;
     map<int, struct OffsetInfo> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
 
+    int reg_GPR_size;
+    int reg_PRED_size;
+    int reg_UGPR_size;
+    int reg_UPRED_size;
 public:
     FuncInfo();
     FuncInfo(string funcName);
-    FuncInfo(const FuncInfo &obj);  //必须显式地定义才能完成深拷贝
-    ~FuncInfo(void);
 
-    // clear
-    void clear();
 
     // function name
     void setFuncName(string funcName);
@@ -38,11 +38,13 @@ public:
     set<string> getSrcFile();
 
     // map offset and filePath, line, code
-    void addOffsetSrc(int offset, string filePath, string line, string code);
+    void addOffsetSrc(int offset, string filePath, string line, string code, Register reg_GPR);
     map<int, struct OffsetInfo> getOffsetSrc();
 
     OffsetInfo searchOffset(int offset);
 
+    // Register
+    void setRegister(string regName, int regSize);
 
     // Print
     void printSrcFile();

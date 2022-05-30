@@ -11,7 +11,7 @@ void mapOffset(string dataPath);
 
 int main() {
 
-    mapOffset("../data/castro.head_10000.txt");
+    mapOffset("../data/vectoradd.txt");
 
     return 0;
 }
@@ -56,19 +56,18 @@ void mapOffset(string dataPath) {
             FI = &tempObj;
             filePath = "no src file";
             fileLine = "-1";
-            //FI->addSrcFile(filePath, fileLine);
+            //FI->addSrcFile(filePath, fileLine);       //报139错
 
             //map_FuncInfos.insert(pair<string, FuncInfo>(tempObj.getFuncName(), tempObj));
 
             //cout << tempObj.getFuncName() << endl;
-            //tempObj.printOffset();
-            //tempObj.printSrcFile();
-            //FI.clear();
 
-
-            //cout << "This is function name： " << function_name[0] << endl;
         }
 
+
+        // match register name
+//        FI->setRegister("GPR", 10);
+//        FI->setRegister("PRED", 1);
 
 
         // match src file and corresponding line
@@ -81,6 +80,9 @@ void mapOffset(string dataPath) {
             FI->addSrcFile(filePath, fileLine);
         }
 
+
+
+
         // match offset and assembly code
         vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*); (.*)", tempStr);
         if (!offset_code.empty()) {
@@ -89,14 +91,54 @@ void mapOffset(string dataPath) {
             int offset = hexToInt(offset_code[0]);
             string code = offset_code[2];
             //outfile << "Offset: " << offset << "       Assembly Code: " << code << "\n";
-            FI->addOffsetSrc(offset, filePath, fileLine, code);
+
+            // construct register
+            Register reg_GPR;
+            reg_GPR.count = 10;
+            reg_GPR.name = "GPR";
+            vector<string> reg_status = getMatch("(.*)\\/\\/ \\|(.*)\\|(.*)\\|", tempStr);  // \/\/ \|(.*)\|(.*)\|
+            if (!reg_status.empty()) {
+ //               cout << reg_status[1][8] << endl;  // GPR
+//                cout << reg_status[2] << endl;  // PRED
+                string str_GPR = reg_status[1];
+                string str_PRED = reg_status[2];
+                reg_GPR.occupied_count = str_GPR[2] - '0';
+                int start = 2;
+                for (int i = 1; i <= reg_GPR.count; i++) {
+                    int index = start + i * 2;
+                    switch (str_GPR[index]) {
+                        case ' ':
+                            reg_GPR.reg_status.push_back(0);
+                            break;
+                        case '^':
+                            reg_GPR.reg_status.push_back(1);
+                            break;
+                        case 'v':
+                            reg_GPR.reg_status.push_back(2);
+                            break;
+                        case 'x':
+                            reg_GPR.reg_status.push_back(3);
+                            break;
+                        case ':':
+                            reg_GPR.reg_status.push_back(4);
+                            break;
+                        default:
+                            cout << "unindentify:" << str_GPR[index] << endl;
+                    }
+                }
+            } else {
+                cout << "no" << endl;
+            }
+
+            //  add to the object
+            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR);
         }
     }
     if (FI != nullptr)
         vec_FuncInfos.push_back(*FI);
 
 
-    // Show result
+    // Show result (map)
     /*
     for (auto iter : map_FuncInfos) {
         cout << "Function Name: " << iter.second.getFuncName() << endl;
@@ -108,227 +150,19 @@ void mapOffset(string dataPath) {
     }
      */
 
-
-    //cout << map_FuncInfos.size() << endl;
-    cout << vec_FuncInfos.size() << endl;
-//    for (int i = 0; i < vec_FuncInfos.size(); i++) {
-//        cout << vec_FuncInfos[i].getFuncName() << endl;
-//        vec_FuncInfos[i].printSrcFile();
-//        vec_FuncInfos[i].printOffset();
-//    }
+    //cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
 
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
-        vec_FuncInfos[i].printSrcFile();
-        vec_FuncInfos[i].printOffset();
-        //vec_FuncInfos[i].searchOffset(0);
+        //cout << vec_FuncInfos[i].getFuncName() << endl;
+        //vec_FuncInfos[i].printSrcFile();          // Print source file and line
+        //vec_FuncInfos[i].printOffset();           // Print mappings
+        //vec_FuncInfos[i].searchOffset(0);       // Test search offset
     }
 
 
 
 
-    // Print source file and line
-    //FI.printSrcFile();
-
-    //cout << endl << endl;
-
-    // Print mappings
-    //FI.printOffset();
-
-    //cout << endl << endl;
-
-    // Test search offset
-    //OffsetInfo offset_res = FI.searchOffset(48);
-
-
-
-
-
-
-
-
-    // string.find()   method
-    /*
-    while (getline(myfile, tempStr)) {
-        if (!begin) {
-            auto pos_functionName = tempStr.find(functionName);
-            if (pos_functionName == 0) {
-                begin = true;
-                cout << "Assembly part begin:" << endl;
-            }
-        } else {
-            auto pos_newLine = tempStr.find("//##");
-            if (pos_newLine != tempStr.npos) { // //##  analyze a new line
-                outfile << tempStr << "\n";
-
-                //analyze source file path and name
-                auto pos_filePath_1 = tempStr.find("File");
-                auto pos_filePath_2 = tempStr.find(", line");
-                string src_file = tempStr.substr(pos_filePath_1 + 6, pos_filePath_2 - pos_filePath_1 - 7);
-                outfile << "Source File: " << src_file << "\n";
-
-                //analyze the num of line
-                auto pos_lineNum_1 = tempStr.find(", line");
-                auto pos_lineNum_2 = tempStr.find("// +");
-                string line_num = tempStr.substr(pos_lineNum_1 + 7, pos_lineNum_2 - pos_lineNum_1 - 7);
-                outfile << "Line Num: " << line_num << "\n\n";
-            }
-        }
-
-
-
-
-    }
-    */
 
     myfile.close();
     outfile.close();
 }
-
-//void mapOffset(string dataPath) {
-//
-//
-//    ifstream myfile (dataPath);
-//    ofstream outfile("../data/result2.txt");
-//    string tempStr;
-//    bool begin = false; //identified function name， assembly part begin
-//
-//    if(!myfile){
-//        cout << "Unable to open myfile";
-//        exit(1); // terminate with error
-//
-//    }
-//    if(!outfile){
-//        cout << "Unable to open otfile";
-//        exit(1); // terminate with error
-//
-//    }
-//
-//
-//
-//
-//    // Analyze line by line
-//    int count = -1;
-//
-//    map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map
-//    vector<FuncInfo> vec_FuncInfos;
-//
-//    string filePath;
-//    string fileLine;
-//    while (getline(myfile, tempStr)) {
-//        // match function name
-//        vector<string> function_name = getMatch("//-+ \\.text\\.(.*) -+", tempStr);
-//        if (function_name.size() != 0) {
-//            count++;
-//            FuncInfo FI = FuncInfo(function_name[0]);
-//            vec_FuncInfos.push_back(FI);
-//
-//            //cout << "This is function name： " << function_name[0] << endl;
-//        }
-//
-//
-//
-//        // match src file and corresponding line
-//        vector<string> src_file = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
-//        if (src_file.size() != 0) {
-//
-//            filePath = src_file[0];
-//            fileLine = src_file[1];
-//            //cout << "Source File    Name: " << filePath << "       Line: " << fileLine << endl;
-//            vec_FuncInfos[count].addSrcFile(filePath, fileLine);
-//        }
-//
-//        // match offset and assembly code
-//        vector<string> offset_code = getMatch("        /\\*(.*)\\*/( +)(.*); (.*)", tempStr);
-//        if (offset_code.size() != 0) {
-//
-//            int offset = hexToInt(offset_code[0]);
-//            string code = offset_code[2];
-//            //outfile << "Offset: " << offset << "       Assembly Code: " << code << "\n";
-//            vec_FuncInfos[count].addOffsetSrc(offset, filePath, fileLine, code);
-//        }
-//    }
-//
-//    // Show result
-//    /*
-//    for (auto iter : map_FuncInfos) {
-//        cout << "Function Name: " << iter.second.getFuncName() << endl;
-//        //iter.second.printOffset();
-////        for (auto iter1 : iter.second.getOffsetSrc()) {
-////            cout << "Offset: " << iter1.first << "  Code: " << *iter1.second.code << endl;
-////        }
-//        cout << endl << endl;
-//    }
-//     */
-//
-//
-//    //cout << map_FuncInfos.size() << endl;
-//    cout << vec_FuncInfos.size() << endl;
-////    for (int i = 0; i < vec_FuncInfos.size(); i++) {
-////        cout << vec_FuncInfos[i].getFuncName() << endl;
-////        vec_FuncInfos[i].printSrcFile();
-////        vec_FuncInfos[i].printOffset();
-////    }
-//
-//    vec_FuncInfos[0].printSrcFile();
-//    vec_FuncInfos[0].printOffset();
-//    //vec_FuncInfos[0].searchOffset(176);
-//
-//
-//
-//    // Print source file and line
-//    //FI.printSrcFile();
-//
-//    //cout << endl << endl;
-//
-//    // Print mappings
-//    //FI.printOffset();
-//
-//    //cout << endl << endl;
-//
-//    // Test search offset
-//    //OffsetInfo offset_res = FI.searchOffset(48);
-//
-//
-//
-//
-//
-//
-//
-//
-//    // string.find()   method
-//    /*
-//    while (getline(myfile, tempStr)) {
-//        if (!begin) {
-//            auto pos_functionName = tempStr.find(functionName);
-//            if (pos_functionName == 0) {
-//                begin = true;
-//                cout << "Assembly part begin:" << endl;
-//            }
-//        } else {
-//            auto pos_newLine = tempStr.find("//##");
-//            if (pos_newLine != tempStr.npos) { // //##  analyze a new line
-//                outfile << tempStr << "\n";
-//
-//                //analyze source file path and name
-//                auto pos_filePath_1 = tempStr.find("File");
-//                auto pos_filePath_2 = tempStr.find(", line");
-//                string src_file = tempStr.substr(pos_filePath_1 + 6, pos_filePath_2 - pos_filePath_1 - 7);
-//                outfile << "Source File: " << src_file << "\n";
-//
-//                //analyze the num of line
-//                auto pos_lineNum_1 = tempStr.find(", line");
-//                auto pos_lineNum_2 = tempStr.find("// +");
-//                string line_num = tempStr.substr(pos_lineNum_1 + 7, pos_lineNum_2 - pos_lineNum_1 - 7);
-//                outfile << "Line Num: " << line_num << "\n\n";
-//            }
-//        }
-//
-//
-//
-//
-//    }
-//    */
-//
-//    myfile.close();
-//    outfile.close();
-//}
