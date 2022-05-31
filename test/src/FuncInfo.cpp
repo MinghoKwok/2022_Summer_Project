@@ -41,6 +41,7 @@ void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string cod
 
     offset_info.src_line = atoi(line.c_str());
     offset_info.code = this->codeSet.find(code);
+    offset_info.reg_GPR = reg_GPR;
 
     this->map_offset_src.insert(pair<int, struct OffsetInfo>(offset, offset_info));
 }
@@ -109,6 +110,17 @@ void FuncInfo::printOffset() {
         cout << "Offset: " << iter->first << endl;
         cout << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << endl;
         cout << "   Code: " << *iter->second.code << endl << endl;
+
+        vector<int> reg_status = iter->second.reg_GPR.reg_status;
+        for (int i = 0; i < reg_status.size(); i++) {
+            switch (reg_status[i]) {
+                case 0:
+                    break;
+                default:
+                    cout << "R" << i << " " << reg_status[i] << "   ";
+            }
+        }
+        cout << endl << endl;
 
 //        outfile << this->funcName << "\n";
 //        outfile << "Offset: " << iter->first << "\n";

@@ -155,7 +155,7 @@ void mapOffset(string dataPath) {
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
         //cout << vec_FuncInfos[i].getFuncName() << endl;
         //vec_FuncInfos[i].printSrcFile();          // Print source file and line
-        //vec_FuncInfos[i].printOffset();           // Print mappings
+        vec_FuncInfos[i].printOffset();           // Print mappings
         //vec_FuncInfos[i].searchOffset(0);       // Test search offset
     }
 
