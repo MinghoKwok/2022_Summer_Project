@@ -4,19 +4,29 @@
 #include "../include/regex_test.h"
 #include "../include/FuncInfo.h"
 #include "../include/helpFunc.h"
+#include "../include/Register.h"
 
 using namespace std;
 
-void mapOffset(string dataPath);
+vector<FuncInfo> mapOffset(string dataPath);
 
 int main() {
 
-    mapOffset("../data/vectoradd.txt");
+    // mapOffset
+    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/vectoradd.txt");
+    /*
+    OffsetInfo OI = vec_FuncInfos[0].searchOffset(144);
+    Register reg_GPR = OI.reg_GPR;
+    string code = *OI.code;
+    //cout << code << endl << endl;
+    vector<string> vec_code = splitCode(code);
+     */
+    analyzeCode(vec_FuncInfos[0]);
 
     return 0;
 }
 
-void mapOffset(string dataPath) {
+vector<FuncInfo> mapOffset(string dataPath) {
 
 
     ifstream myfile (dataPath);
@@ -155,7 +165,7 @@ void mapOffset(string dataPath) {
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
         //cout << vec_FuncInfos[i].getFuncName() << endl;
         //vec_FuncInfos[i].printSrcFile();          // Print source file and line
-        vec_FuncInfos[i].printOffset();           // Print mappings
+        //vec_FuncInfos[i].printOffset();           // Print mappings
         //vec_FuncInfos[i].searchOffset(0);       // Test search offset
     }
 
@@ -165,4 +175,8 @@ void mapOffset(string dataPath) {
 
     myfile.close();
     outfile.close();
+
+
+
+    return vec_FuncInfos;
 }

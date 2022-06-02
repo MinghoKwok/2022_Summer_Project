@@ -58,8 +58,31 @@ OffsetInfo FuncInfo::searchOffset(int offset) {
         return emptyOI;
     } else {
         cout << "Offset: " << offset << endl;
-        cout << "Src File Path: " << *iter->second.src_path << "   Line " << iter->second.src_line << endl;
-        cout << "Code: " << *iter->second.code << endl;
+        cout << "   Src File Path: " << *iter->second.src_path << "   Line " << iter->second.src_line << endl;
+        cout << "   Code: " << *iter->second.code << endl;
+
+        cout << "   GPR status: ";
+        vector<int> reg_status = iter->second.reg_GPR.reg_status;
+        for (int i = 0; i < reg_status.size(); i++) {
+            switch (reg_status[i]) {
+                case 0:
+                    break;
+                case 1:
+                    cout << "R" << i << " is " << "^" << "   ";
+                    break;
+                case 2:
+                    cout << "R" << i << " is " << "v" << "   ";
+                    break;
+                case 3:
+                    cout << "R" << i << " is " << "x" << "   ";
+                    break;
+                case 4:
+                    cout << "R" << i << " is " << ":" << "   ";
+                    break;
+            }
+        }
+        cout << endl << endl;
+
         return iter->second;
     }
 
@@ -109,15 +132,26 @@ void FuncInfo::printOffset() {
         //cout << this->funcName << endl;
         cout << "Offset: " << iter->first << endl;
         cout << "   Src File: " << *iter->second.src_path << "     Line: " << iter->second.src_line << endl;
-        cout << "   Code: " << *iter->second.code << endl << endl;
+        cout << "   Code: " << *iter->second.code << endl;
 
+        cout << "   GPR status: ";
         vector<int> reg_status = iter->second.reg_GPR.reg_status;
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:
                     break;
-                default:
-                    cout << "R" << i << " " << reg_status[i] << "   ";
+                case 1:
+                    cout << "R" << i << " is " << "^" << "   ";
+                    break;
+                case 2:
+                    cout << "R" << i << " is " << "v" << "   ";
+                    break;
+                case 3:
+                    cout << "R" << i << " is " << "x" << "   ";
+                    break;
+                case 4:
+                    cout << "R" << i << " is " << ":" << "   ";
+                    break;
             }
         }
         cout << endl << endl;
