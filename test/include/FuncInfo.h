@@ -9,7 +9,7 @@
 #include <map>
 #include <set>
 #include <vector>
-#include "OffsetInfo.h"
+#include "SASSLineInfo.h"
 
 using namespace std;
 
@@ -18,7 +18,7 @@ private:
     string funcName;
     set<string> srcFileSet; //换成 set  path
     set<string> codeSet;
-    map<int, struct OffsetInfo> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
+    map<int, struct SASSLineInfo> map_offset_src; // map: offset -> srcfile name, line, code          存储指向srcFile的指针      偏移量 int
 
     int reg_GPR_size;
     int reg_PRED_size;
@@ -39,9 +39,9 @@ public:
 
     // map offset and filePath, line, code
     void addOffsetSrc(int offset, string filePath, string line, string code, Register reg_GPR);
-    map<int, struct OffsetInfo> getOffsetSrc();
+    map<int, struct SASSLineInfo> getOffsetSrc();
 
-    OffsetInfo searchOffset(int offset);
+    SASSLineInfo searchOffset(int offset);
 
     // Register
     void setRegister(string regName, int regSize);

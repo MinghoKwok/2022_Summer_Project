@@ -1,12 +1,13 @@
-#ifndef TEST_OFFSETINFO_H
-#define TEST_OFFSETINFO_H
+#ifndef TEST_SASSLINEINFO_H
+#define TEST_SASSLINEINFO_H
 
 #include <string>
+#include <set>
 #include "Register.h"
 
 using namespace std;
 
-struct OffsetInfo{
+struct SASSLineInfo{
     set<string>::iterator src_path;
     int src_line;
     set<string>::iterator code;
@@ -17,4 +18,4 @@ struct OffsetInfo{
     Register reg_UPRED;
 };
 
-#endif //TEST_OFFSETINFO_H
+#endif //TEST_SASSLINEINFO_H

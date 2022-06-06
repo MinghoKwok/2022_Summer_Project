@@ -35,7 +35,7 @@ void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string cod
 
     this->codeSet.insert(code); // 找找直接返回指针的 set 函数
 
-    OffsetInfo offset_info;
+    SASSLineInfo offset_info;
     offset_info.src_path = this->srcFileSet.find(filePath);
 
 
@@ -43,18 +43,18 @@ void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string cod
     offset_info.code = this->codeSet.find(code);
     offset_info.reg_GPR = reg_GPR;
 
-    this->map_offset_src.insert(pair<int, struct OffsetInfo>(offset, offset_info));
+    this->map_offset_src.insert(pair<int, struct SASSLineInfo>(offset, offset_info));
 }
 
-map<int, struct OffsetInfo> FuncInfo::getOffsetSrc() {
+map<int, struct SASSLineInfo> FuncInfo::getOffsetSrc() {
     return this->map_offset_src;
 }
 
 
-OffsetInfo FuncInfo::searchOffset(int offset) {
+SASSLineInfo FuncInfo::searchOffset(int offset) {
     auto iter = this->map_offset_src.find(offset);
     if (iter == map_offset_src.end()) {
-        OffsetInfo emptyOI;
+        SASSLineInfo emptyOI;
         return emptyOI;
     } else {
         cout << "Offset: " << offset << endl;
@@ -126,7 +126,7 @@ void FuncInfo::printOffset() {
 //        exit(1); // terminate with error
 //    }
 
-    //map<int, struct OffsetInfo> offset_src = this->getOffsetSrc();
+    //map<int, struct SASSLineInfo> offset_src = this->getOffsetSrc();
     auto iter = this->map_offset_src.begin();
     while (iter != this->map_offset_src.end()) {
         //cout << this->funcName << endl;

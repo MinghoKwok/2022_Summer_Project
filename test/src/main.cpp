@@ -15,7 +15,7 @@ int main() {
     // mapOffset
     vector<FuncInfo> vec_FuncInfos = mapOffset("../data/vectoradd.txt");
     /*
-    OffsetInfo OI = vec_FuncInfos[0].searchOffset(144);
+    SASSLineInfo OI = vec_FuncInfos[0].searchOffset(144);
     Register reg_GPR = OI.reg_GPR;
     string code = *OI.code;
     //cout << code << endl << endl;
