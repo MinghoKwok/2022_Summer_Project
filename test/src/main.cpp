@@ -50,7 +50,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
     // Analyze line by line
     FuncInfo *FI = nullptr;
-    map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map
+    map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map  增加时，如果发现key已经存在，报错
     vector<FuncInfo> vec_FuncInfos;
 
     string filePath = "no src file";
