@@ -55,6 +55,10 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
     string filePath = "no src file";
     string fileLine = "-1";
+    int reg_GPR_size = -1;
+    int reg_PRED_size = -1;
+    int reg_UGPR_size = -1;
+    int reg_UPRED_size = -1;
     while (getline(myfile, tempStr)) {
         // match function name
         vector<string> function_name = getMatch("//-+ \\.text\\.(.*) -+", tempStr);
@@ -66,6 +70,11 @@ vector<FuncInfo> mapOffset(string dataPath) {
             FI = &tempObj;
             filePath = "no src file";
             fileLine = "-1";
+
+            reg_GPR_size = -1;
+            reg_PRED_size = -1;
+            reg_UGPR_size = -1;
+            reg_UPRED_size = -1;
             //FI->addSrcFile(filePath, fileLine);       //报139错
 
             //map_FuncInfos.insert(pair<string, FuncInfo>(tempObj.getFuncName(), tempObj));
@@ -79,6 +88,14 @@ vector<FuncInfo> mapOffset(string dataPath) {
 //        FI->setRegister("GPR", 10);
 //        FI->setRegister("PRED", 1);
 
+        // count each register
+        vector<string> reg_count = getMatch("(.*)\\/\\/ \\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|", tempStr);
+        if (!reg_count.empty()) {
+            reg_GPR_size = reg_count[1].back() - '0' + 1;
+            cout << "reg_GPR_size: " << reg_GPR_size << endl;
+            reg_PRED_size = reg_count[2].back() - '0' + 1;
+            cout << "reg_PRED_size: " << reg_PRED_size << endl;
+        }
 
         // match src file and corresponding line
         vector<string> src_file = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
@@ -104,43 +121,86 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
             // construct register
             Register reg_GPR;
-            reg_GPR.count = 10;
+            reg_GPR.size = reg_GPR_size;
             reg_GPR.name = "GPR";
-            vector<string> reg_status = getMatch("(.*)\\/\\/ \\|(.*)\\|(.*)\\|", tempStr);  // \/\/ \|(.*)\|(.*)\|
+            Register reg_PRED;
+            reg_PRED.size = reg_PRED_size;
+            reg_PRED.name = "PRED";
+            vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
             if (!reg_status.empty()) {
  //               cout << reg_status[1][8] << endl;  // GPR
 //                cout << reg_status[2] << endl;  // PRED
                 string str_GPR = reg_status[1];
                 string str_PRED = reg_status[2];
-                reg_GPR.occupied_count = str_GPR[2] - '0';
-                int start = 2;
-                for (int i = 1; i <= reg_GPR.count; i++) {
-                    int index = start + i * 2;
-                    switch (str_GPR[index]) {
-                        case ' ':
-                            reg_GPR.reg_status.push_back(0);
-                            break;
-                        case '^':
-                            reg_GPR.reg_status.push_back(1);
-                            break;
-                        case 'v':
-                            reg_GPR.reg_status.push_back(2);
-                            break;
-                        case 'x':
-                            reg_GPR.reg_status.push_back(3);
-                            break;
-                        case ':':
-                            reg_GPR.reg_status.push_back(4);
-                            break;
-                        default:
-                            cout << "unindentify:" << str_GPR[index] << endl;
+
+                if (str_GPR.empty()) {  // no reg_GPR used now
+                    reg_GPR.occupied_count = 0;
+                } else {
+                    reg_GPR.occupied_count = str_GPR[0] - '0';
+                    int start = 0;
+                    for (int i = 1; i <= reg_GPR.size; i++) {
+                        int index = start + i * 2;
+                        //cout << str_GPR[index] << endl;
+                        switch (str_GPR[index]) {
+                            case ' ':
+                                reg_GPR.reg_status.push_back(0);
+                                break;
+                            case '^':
+                                reg_GPR.reg_status.push_back(1);
+                                break;
+                            case 'v':
+                                reg_GPR.reg_status.push_back(2);
+                                break;
+                            case 'x':
+                                reg_GPR.reg_status.push_back(3);
+                                break;
+                            case ':':
+                                reg_GPR.reg_status.push_back(4);
+                                break;
+                            default:
+                                cout << "Error: Unidentify:" << str_GPR[index] << endl;
+                        }
                     }
                 }
+
+                if (str_PRED.empty()) {  // no reg_PRED used now
+                    reg_PRED.occupied_count = 0;
+                } else {
+                    reg_PRED.occupied_count = str_PRED[0] - '0';
+                    int start = 0;
+                    for (int i = 1; i <= reg_PRED.size; i++) {
+                        int index = start + i * 2;
+                        switch (str_PRED[index]) {
+                            case ' ':
+                                reg_PRED.reg_status.push_back(0);
+                                break;
+                            case '^':
+                                reg_PRED.reg_status.push_back(1);
+                                break;
+                            case 'v':
+                                reg_PRED.reg_status.push_back(2);
+                                break;
+                            case 'x':
+                                reg_PRED.reg_status.push_back(3);
+                                break;
+                            case ':':
+                                reg_PRED.reg_status.push_back(4);
+                                break;
+                            default:
+                                cout << "Error: Unidentify:" << str_PRED[index] << endl;
+                        }
+                    }
+                }
+
             } else {
-                cout << "no" << endl;
+                cout << "Error: Not found reg_status." << endl;
             }
 
             //  add to the object
+//            for (int i = 0; i < reg_GPR.reg_status.size(); i++) {
+//                cout << reg_GPR.reg_status[i] << " ";
+//            }
+//            cout << endl;
             FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR);
         }
     }

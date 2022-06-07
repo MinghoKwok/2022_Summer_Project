@@ -8,7 +8,7 @@ using namespace std;
 
 struct Register{
     string name;
-    int count;
+    int size;
     int occupied_count;
     vector<int> reg_status;     // 0    <space> : Register not in use
                                 // 1    ^       : Register assignment                   写
