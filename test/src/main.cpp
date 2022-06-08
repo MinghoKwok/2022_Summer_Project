@@ -8,12 +8,12 @@
 
 using namespace std;
 
-vector<FuncInfo> mapOffset(string dataPath);
+map<string, FuncInfo> mapOffset(string dataPath);
 
 int main() {
 
     // mapOffset
-    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/vectoradd.txt");
+    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/vectoradd.txt");
     /*
     SASSLineInfo OI = vec_FuncInfos[0].searchOffset(144);
     Register reg_GPR = OI.reg_GPR;
@@ -21,12 +21,12 @@ int main() {
     //cout << code << endl << endl;
     vector<string> vec_code = splitCode(code);
      */
-    analyzeCode(vec_FuncInfos[0]);
+    analyzeCode(map_FuncInfos["_Z9vectorAddPKfS0_Pfi"]);
 
     return 0;
 }
 
-vector<FuncInfo> mapOffset(string dataPath) {
+map<string, FuncInfo> mapOffset(string dataPath) {
 
 
     ifstream myfile (dataPath);
@@ -63,8 +63,11 @@ vector<FuncInfo> mapOffset(string dataPath) {
         // match function name
         vector<string> function_name = getMatch("//-+ \\.text\\.(.*) -+", tempStr);
         if (!function_name.empty()) {   // match 到 function 了
-            if (FI != nullptr)
+            if (FI != nullptr) {
+                //cout << FI->getFuncName() << endl;
                 vec_FuncInfos.push_back(*FI);
+                map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+            }
 
             FuncInfo tempObj(function_name[0]);
             FI = &tempObj;
@@ -77,10 +80,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
             reg_UPRED_size = -1;
             //FI->addSrcFile(filePath, fileLine);       //报139错
 
-            //map_FuncInfos.insert(pair<string, FuncInfo>(tempObj.getFuncName(), tempObj));
-
-            //cout << tempObj.getFuncName() << endl;
-
+            cout << FI->getFuncName() << endl;
         }
 
 
@@ -204,8 +204,11 @@ vector<FuncInfo> mapOffset(string dataPath) {
             FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR);
         }
     }
-    if (FI != nullptr)
+    if (FI != nullptr) {
+        cout << FI->getFuncName() << endl;
         vec_FuncInfos.push_back(*FI);
+        map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+    }
 
 
     // Show result (map)
@@ -238,5 +241,5 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
 
 
-    return vec_FuncInfos;
+    return map_FuncInfos;
 }
