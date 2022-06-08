@@ -168,8 +168,8 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 } else {
                     reg_PRED.occupied_count = str_PRED[0] - '0';
                     int start = 0;
-                    for (int i = 1; i <= reg_PRED.size; i++) {
-                        int index = start + i * 2;
+                    for (int i = 0; i < reg_PRED.size; i++) {
+                        int index = start + 1 + to_string(i).size();
                         switch (str_PRED[index]) {
                             case ' ':
                                 reg_PRED.reg_status.push_back(0);

@@ -64,7 +64,7 @@ _Z9vectorAddPKfS0_Pfi:                                                          
         /*0090*/                   LDG.E.SYS R4, [R4] ;                              // |  7   : : : x v : :     |     |
         /*00a0*/                   LDG.E.SYS R3, [R2] ;                              // |  6   : v x :   : :     |     |
         /*00b0*/                   IMAD.WIDE R6, R6, R7, c[0x0][0x170] ;             // |  5   :   : :   x x     |     |
-        /*00c0*/                   FADD R9, R4, R3 ;                                 // |  6   :   v v   : :   ^ |     |
+        /*00c0*/              @!P5 FADD R9, R4, R3 ;                                 // |  6   :   v v   : :   ^ |     |
         /*00d0*/                   STG.E.SYS [R6], R9 ;                              // |  4   :         v v   v |     |
 	//## File "/home/findhao/NVIDIA_CUDA-11.4_Samples/0_Simple/vectorAdd/vectorAdd.cu", line 41// +------------------------+-----+
                                                                                      // Legend:

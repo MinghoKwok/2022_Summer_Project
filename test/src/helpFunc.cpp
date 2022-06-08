@@ -33,7 +33,8 @@ vector<string> splitCode(string code) { // 后续考虑并入类中             
             }
         } else {
             if (code[i] == ',' || code[i] == ' ' || code[i] == ';') {
-                vec_code.push_back(str);
+                if (str.find("@") == str.npos)
+                    vec_code.push_back(str);
                 str = "";
             } else {
                 str.append(1, code[i]);
