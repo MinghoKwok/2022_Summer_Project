@@ -9,5 +9,6 @@ int hexToInt(string str);
 
 vector<string> splitCode(string code);
 void analyzeCode(FuncInfo FI);
+int regCount(string numStr);
 
 #endif //TEST_HELPFUNC_H

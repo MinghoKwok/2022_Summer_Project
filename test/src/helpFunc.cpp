@@ -54,9 +54,9 @@ vector<string> splitCode(string code) { // 后续考虑并入类中             
 // 参数 offset, kernel name
 void analyzeCode(FuncInfo FI) {
     int search_index = 144;
-    SASSLineInfo OI = FI.searchOffset(search_index);
-    Register reg_GPR = OI.reg_GPR;
-    string code = *OI.code;
+    SASSLineInfo SI = FI.searchOffset(search_index);
+    Register reg_GPR = SI.reg_GPR;
+    string code = *SI.code;
     //cout << code << endl << endl;
     vector<string> vec_code = splitCode(code);
 
@@ -80,8 +80,8 @@ void analyzeCode(FuncInfo FI) {
         // find where this reg is used (read)
         bool found = false;
         for (search_index += 0x10; search_index <= (FI.getOffsetSrc().size() - 1) * 0x10; search_index += 0x10) { // 16 -> 0x10
-            OI = FI.searchOffset(search_index);
-            reg_GPR = OI.reg_GPR;
+            SI = FI.searchOffset(search_index);
+            reg_GPR = SI.reg_GPR;
             if ((reg_GPR.reg_status[reg_write] & 0x2) == 0x2) { // 2 -> 读 v, 3 -> 读+写 x     // & 0x2
                 found = true;
                 break;  // find the read line
@@ -93,7 +93,7 @@ void analyzeCode(FuncInfo FI) {
             cout << "ERROR: Not found where the register just written is read after loading process." << endl;
         }
 
-        code = *OI.code;
+        code = *SI.code;
         vec_code = splitCode(code);
 
 //        if (vec_code[0] == "FADD") {
@@ -120,4 +120,14 @@ void analyzeCode(FuncInfo FI) {
     }
 
 
+}
+
+// 计算reg个数的辅助函数
+int regCount(string numStr) {
+    stringstream input(numStr);
+    string num;
+    while (input>>num)
+        continue;
+
+    return atoi(num.c_str()) + 1;
 }

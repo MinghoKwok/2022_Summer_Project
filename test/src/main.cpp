@@ -13,7 +13,7 @@ map<string, FuncInfo> mapOffset(string dataPath);
 int main() {
 
     // mapOffset
-    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/vectoradd.txt");
+    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/castro1.txt");
     /*
     SASSLineInfo OI = vec_FuncInfos[0].searchOffset(144);
     Register reg_GPR = OI.reg_GPR;
@@ -21,7 +21,7 @@ int main() {
     //cout << code << endl << endl;
     vector<string> vec_code = splitCode(code);
      */
-    analyzeCode(map_FuncInfos["_Z9vectorAddPKfS0_Pfi"]);
+    //analyzeCode(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"]);
 
     return 0;
 }
@@ -89,12 +89,16 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 //        FI->setRegister("PRED", 1);
 
         // count each register
-        vector<string> reg_count = getMatch("(.*)\\/\\/ \\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|", tempStr);
+        vector<string> reg_count = getMatch("(.*)\\/\\/ \\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|", tempStr);
         if (!reg_count.empty()) {
-            reg_GPR_size = reg_count[1].back() - '0' + 1;
+            reg_GPR_size = regCount(reg_count[1]);
             cout << "reg_GPR_size: " << reg_GPR_size << endl;
-            reg_PRED_size = reg_count[2].back() - '0' + 1;
+            reg_PRED_size = regCount(reg_count[2]);
             cout << "reg_PRED_size: " << reg_PRED_size << endl;
+            reg_UGPR_size = regCount(reg_count[3]);
+            cout << "reg_UGPR_size: " << reg_UGPR_size << endl;
+            reg_UPRED_size = regCount(reg_count[4]);
+            cout << "reg_UPRED_size: " << reg_UPRED_size << endl;
         }
 
         // match src file and corresponding line
@@ -126,12 +130,20 @@ map<string, FuncInfo> mapOffset(string dataPath) {
             Register reg_PRED;
             reg_PRED.size = reg_PRED_size;
             reg_PRED.name = "PRED";
-            vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
+            Register reg_UGPR;
+            reg_UGPR.size = reg_UGPR_size;
+            reg_UGPR.name = "UGPR";
+            Register reg_UPRED;
+            reg_UPRED.size = reg_UPRED_size;
+            reg_UPRED.name = "UPRED";
+            vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
             if (!reg_status.empty()) {
  //               cout << reg_status[1][8] << endl;  // GPR
 //                cout << reg_status[2] << endl;  // PRED
                 string str_GPR = reg_status[1];
                 string str_PRED = reg_status[2];
+                string str_UGPR = reg_status[3];
+                string str_UPRED = reg_status[4];
 
                 if (str_GPR.empty()) {  // no reg_GPR used now
                     reg_GPR.occupied_count = 0;
@@ -192,6 +204,65 @@ map<string, FuncInfo> mapOffset(string dataPath) {
                     }
                 }
 
+                if (str_UGPR.empty()) {  // no reg_UGPR used now
+                    reg_UGPR.occupied_count = 0;
+                } else {
+                    reg_UGPR.occupied_count = str_UGPR[0] - '0';
+                    int start = 0;
+                    for (int i = 1; i <= reg_UGPR.size; i++) {
+                        int index = start + i * 2;
+                        //cout << str_UGPR[index] << endl;
+                        switch (str_UGPR[index]) {
+                            case ' ':
+                                reg_UGPR.reg_status.push_back(0);
+                                break;
+                            case '^':
+                                reg_UGPR.reg_status.push_back(1);
+                                break;
+                            case 'v':
+                                reg_UGPR.reg_status.push_back(2);
+                                break;
+                            case 'x':
+                                reg_UGPR.reg_status.push_back(3);
+                                break;
+                            case ':':
+                                reg_UGPR.reg_status.push_back(4);
+                                break;
+                            default:
+                                cout << "Error: Unidentify:" << str_UGPR[index] << endl;
+                        }
+                    }
+                }
+
+                if (str_UPRED.empty()) {  // no reg_UPRED used now
+                    reg_UPRED.occupied_count = 0;
+                } else {
+                    reg_UPRED.occupied_count = str_UPRED[0] - '0';
+                    int start = 0;
+                    for (int i = 0; i < reg_UPRED.size; i++) {
+                        int index = start + 1 + to_string(i).size();
+                        switch (str_UPRED[index]) {
+                            case ' ':
+                                reg_UPRED.reg_status.push_back(0);
+                                break;
+                            case '^':
+                                reg_UPRED.reg_status.push_back(1);
+                                break;
+                            case 'v':
+                                reg_UPRED.reg_status.push_back(2);
+                                break;
+                            case 'x':
+                                reg_UPRED.reg_status.push_back(3);
+                                break;
+                            case ':':
+                                reg_UPRED.reg_status.push_back(4);
+                                break;
+                            default:
+                                cout << "Error: Unidentify:" << str_UPRED[index] << endl;
+                        }
+                    }
+                }
+
             } else {
                 cout << "Error: Not found reg_status." << endl;
             }
@@ -201,7 +272,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 //                cout << reg_GPR.reg_status[i] << " ";
 //            }
 //            cout << endl;
-            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR);
+            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
         }
     }
     if (FI != nullptr) {
