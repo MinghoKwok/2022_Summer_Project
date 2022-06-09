@@ -66,6 +66,7 @@ SASSLineInfo FuncInfo::searchOffset(int offset) {
 
         cout << "   GPR status: ";
         vector<int> reg_status = iter->second.reg_GPR.reg_status;
+        cout << "size: " << reg_status.size();
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:

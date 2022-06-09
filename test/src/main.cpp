@@ -8,12 +8,20 @@
 
 using namespace std;
 
-map<string, FuncInfo> mapOffset(string dataPath);
+vector<FuncInfo> mapOffset(string dataPath);
 
 int main() {
 
     // mapOffset
-    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/castro1.txt");
+    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro0.txt");
+    //cout << "Size: " << map_FuncInfos.size() << endl;
+    //cout << "KEY: " << map_FuncInfos.begin()->first << endl;
+    //cout << "Func Name" << map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"].getFuncName() << endl;
+
+//    FuncInfo FI = map_FuncInfos.begin()->second;
+//    SASSLineInfo SI = FI.searchOffset(0);
+//    cout << "GPR: " << SI.reg_GPR.size << endl;
+
     /*
     SASSLineInfo OI = vec_FuncInfos[0].searchOffset(144);
     Register reg_GPR = OI.reg_GPR;
@@ -21,12 +29,14 @@ int main() {
     //cout << code << endl << endl;
     vector<string> vec_code = splitCode(code);
      */
+    //analyzeCode(map_FuncInfos["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"]);
     //analyzeCode(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"]);
+
 
     return 0;
 }
 
-map<string, FuncInfo> mapOffset(string dataPath) {
+vector<FuncInfo> mapOffset(string dataPath) {
 
 
     ifstream myfile (dataPath);
@@ -50,7 +60,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 
     // Analyze line by line
     FuncInfo *FI = nullptr;
-    map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map  增加时，如果发现key已经存在，报错
+    //map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map  增加时，如果发现key已经存在，报错
     vector<FuncInfo> vec_FuncInfos;
 
     string filePath = "no src file";
@@ -64,12 +74,14 @@ map<string, FuncInfo> mapOffset(string dataPath) {
         vector<string> function_name = getMatch("//-+ \\.text\\.(.*) -+", tempStr);
         if (!function_name.empty()) {   // match 到 function 了
             if (FI != nullptr) {
-                //cout << FI->getFuncName() << endl;
+                //cout << "Func Name: " << FI->getFuncName() << endl;
                 vec_FuncInfos.push_back(*FI);
-                map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+                //map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+                //cout << "test: " << map_FuncInfos[FI->getFuncName()].getFuncName() << endl;
             }
 
-            FuncInfo tempObj(function_name[0]);
+            string str(function_name[0]);
+            FuncInfo tempObj(str);
             FI = &tempObj;
             filePath = "no src file";
             fileLine = "-1";
@@ -80,8 +92,9 @@ map<string, FuncInfo> mapOffset(string dataPath) {
             reg_UPRED_size = -1;
             //FI->addSrcFile(filePath, fileLine);       //报139错
 
-            cout << FI->getFuncName() << endl;
+            cout << "test2: " << FI->getFuncName() << endl;
         }
+
 
 
         // match register name
@@ -99,7 +112,11 @@ map<string, FuncInfo> mapOffset(string dataPath) {
             cout << "reg_UGPR_size: " << reg_UGPR_size << endl;
             reg_UPRED_size = regCount(reg_count[4]);
             cout << "reg_UPRED_size: " << reg_UPRED_size << endl;
+
+            //cout << "test3: " << FI->getFuncName() << endl;
         }
+
+
 
         // match src file and corresponding line
         vector<string> src_file = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
@@ -140,7 +157,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
             if (!reg_status.empty()) {
  //               cout << reg_status[1][8] << endl;  // GPR
 //                cout << reg_status[2] << endl;  // PRED
-                string str_GPR = reg_status[1];
+                string str_GPR = reg_status[1]; cout << str_GPR << endl;
                 string str_PRED = reg_status[2];
                 string str_UGPR = reg_status[3];
                 string str_UPRED = reg_status[4];
@@ -173,6 +190,8 @@ map<string, FuncInfo> mapOffset(string dataPath) {
                                 cout << "Error: Unidentify:" << str_GPR[index] << endl;
                         }
                     }
+
+
                 }
 
                 if (str_PRED.empty()) {  // no reg_PRED used now
@@ -272,13 +291,16 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 //                cout << reg_GPR.reg_status[i] << " ";
 //            }
 //            cout << endl;
+            cout << "reg_GPR.reg_status[1]: " << reg_GPR.reg_status.size() << endl;
             FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
+            int GPRsize = FI->searchOffset(0).reg_GPR.reg_status.size();
+            cout << "FI reg_GPR.reg_status[1]:" << GPRsize << endl;
         }
     }
     if (FI != nullptr) {
         cout << FI->getFuncName() << endl;
         vec_FuncInfos.push_back(*FI);
-        map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+        //map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
     }
 
 
@@ -294,7 +316,11 @@ map<string, FuncInfo> mapOffset(string dataPath) {
     }
      */
 
-    //cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
+    cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
+    int gpr_size = vec_FuncInfos[0].searchOffset(0).reg_GPR.size;
+    int pred_size = vec_FuncInfos[0].searchOffset(0).reg_PRED.size;
+    cout << "vec GPR: " << gpr_size << endl;
+    cout << "vec PRED: " << pred_size << endl;
 
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
         //cout << vec_FuncInfos[i].getFuncName() << endl;
@@ -312,5 +338,5 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 
 
 
-    return map_FuncInfos;
+    return vec_FuncInfos;
 }

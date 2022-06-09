@@ -53,7 +53,7 @@ vector<string> splitCode(string code) { // 后续考虑并入类中             
 
 // 参数 offset, kernel name
 void analyzeCode(FuncInfo FI) {
-    int search_index = 144;
+    int search_index = 0;
     SASSLineInfo SI = FI.searchOffset(search_index);
     Register reg_GPR = SI.reg_GPR;
     string code = *SI.code;
