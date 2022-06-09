@@ -4,7 +4,46 @@
 
 using namespace std;
 
-const vector<string> AssembFunc = {"IADD", "FADD"};
+const vector<string> AssembFunc = {
+//        the followings are integer instructions.
+                                    "IMAD",
+                                   "IMADSP",
+                                   "IMUL",
+                                   "IADD",
+                                   "ISCADD",
+                                   "ISAD",
+                                   "IMNMX",
+                                   "BFE",
+                                   "BFI",
+                                   "SHR",
+                                   "SHL",
+                                   "SHF",
+                                   "LOP",
+                                   "FLO",
+                                   "ISET",
+                                   "ISETP",
+                                   "ICMP",
+                                   "POPC",
+//    the following are FP32 instructions
+                                   "FFMA",
+                                   "FADD",
+                                   "FCMP",
+                                   "FMUL",
+                                   "FMNMX",
+                                   "FSWZ",
+                                   "FSET",
+                                   "FSETP",
+                                   "FCHK",
+                                   "RRO",
+//                                   the following are FP64 instructions
+                                   "MUFU",
+                                   "DFMA",
+                                   "DADD",
+                                   "DMUL",
+                                   "DMNMX",
+                                   "DSET",
+                                   "DSETP"
+};
 
 int hexToInt(string str) {
     int len = str.size();
