@@ -5,15 +5,15 @@
 #include "../include/FuncInfo.h"
 #include "../include/helpFunc.h"
 #include "../include/Register.h"
-
+// include lib.h  lib.cpp（写init）
 using namespace std;
 
 vector<FuncInfo> mapOffset(string dataPath);
-
+                                                                                    // 下周一测试更多txt
 int main() {
 
     // mapOffset
-    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro0.txt");
+    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro1.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
     //cout << "Size: " << map_FuncInfos.size() << endl;
     //cout << "KEY: " << map_FuncInfos.begin()->first << endl;
     //cout << "Func Name" << map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"].getFuncName() << endl;
@@ -31,7 +31,7 @@ int main() {
      */
     //analyzeCode(map_FuncInfos["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"]);
     //analyzeCode(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"]);
-
+    // 改名 searchOffset
 
     return 0;
 }
@@ -81,8 +81,8 @@ vector<FuncInfo> mapOffset(string dataPath) {
             }
 
             string str(function_name[0]);
-            FuncInfo tempObj(str);
-            FI = &tempObj;
+            FuncInfo *tempObj = new FuncInfo(str);
+            FI = tempObj;
             filePath = "no src file";
             fileLine = "-1";
 
@@ -101,7 +101,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
 //        FI->setRegister("GPR", 10);
 //        FI->setRegister("PRED", 1);
 
-        // count each register
+        // count each register          // 写进function的else
         vector<string> reg_count = getMatch("(.*)\\/\\/ \\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|", tempStr);
         if (!reg_count.empty()) {
             reg_GPR_size = regCount(reg_count[1]);
@@ -119,7 +119,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
 
         // match src file and corresponding line
-        vector<string> src_file = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);
+        vector<string> src_file = getMatch("\t//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);     // 去掉前后空白
         if (!src_file.empty()) {
 
             filePath = src_file[0];
@@ -292,8 +292,8 @@ vector<FuncInfo> mapOffset(string dataPath) {
 //            }
 //            cout << endl;
             cout << "reg_GPR.reg_status[1]: " << reg_GPR.reg_status.size() << endl;
-            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
-            int GPRsize = FI->searchOffset(0).reg_GPR.reg_status.size();
+            FI->addOffsetSrc(offset, filePath, fileLine, code, &reg_GPR, &reg_PRED, &reg_UGPR, &reg_UPRED);
+            int GPRsize = FI->searchOffset(0).reg_GPR->reg_status.size();
             cout << "FI reg_GPR.reg_status[1]:" << GPRsize << endl;
         }
     }
@@ -317,13 +317,13 @@ vector<FuncInfo> mapOffset(string dataPath) {
      */
 
     cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
-    int gpr_size = vec_FuncInfos[0].searchOffset(0).reg_GPR.size;
-    int pred_size = vec_FuncInfos[0].searchOffset(0).reg_PRED.size;
+    int gpr_size = vec_FuncInfos[0].searchOffset(0).reg_GPR->size;
+    int pred_size = vec_FuncInfos[0].searchOffset(0).reg_PRED->size;
     cout << "vec GPR: " << gpr_size << endl;
     cout << "vec PRED: " << pred_size << endl;
 
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
-        //cout << vec_FuncInfos[i].getFuncName() << endl;
+        cout << vec_FuncInfos[i].getFuncName() << endl;
         //vec_FuncInfos[i].printSrcFile();          // Print source file and line
         //vec_FuncInfos[i].printOffset();           // Print mappings
         //vec_FuncInfos[i].searchOffset(0);       // Test search offset

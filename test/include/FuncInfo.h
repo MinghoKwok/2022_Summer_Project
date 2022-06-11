@@ -38,7 +38,7 @@ public:
     set<string> getSrcFile();
 
     // map offset and filePath, line, code
-    void addOffsetSrc(int offset, string filePath, string line, string code, Register reg_GPR, Register reg_PRED, Register reg_UGPR, Register reg_UPRED);
+    void addOffsetSrc(int offset, string filePath, string line, string code, Register *reg_GPR, Register *reg_PRED, Register *reg_UGPR, Register *reg_UPRED);
     map<int, struct SASSLineInfo> getOffsetSrc();
 
     SASSLineInfo searchOffset(int offset);

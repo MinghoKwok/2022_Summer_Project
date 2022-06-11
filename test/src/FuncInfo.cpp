@@ -31,20 +31,20 @@ set<string> FuncInfo::getSrcFile() {
     return this->srcFileSet;
 }
 
-void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code, Register reg_GPR, Register reg_PRED, Register reg_UGPR, Register reg_UPRED) {
+void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code, Register *reg_GPR, Register *reg_PRED, Register *reg_UGPR, Register *reg_UPRED) {
 
     this->codeSet.insert(code); // 找找直接返回指针的 set 函数
 
     SASSLineInfo sassLine_info;
     sassLine_info.src_path = this->srcFileSet.find(filePath);
 
-
     sassLine_info.src_line = atoi(line.c_str());
     sassLine_info.code = this->codeSet.find(code);
     sassLine_info.reg_GPR = reg_GPR;
     sassLine_info.reg_PRED = reg_PRED;
-    sassLine_info.reg_GPR = reg_UGPR;
-    sassLine_info.reg_PRED = reg_UPRED;
+    sassLine_info.reg_UGPR = reg_UGPR;
+    sassLine_info.reg_UPRED = reg_UPRED;
+
 
     this->map_offset_src.insert(pair<int, struct SASSLineInfo>(offset, sassLine_info));
 }
@@ -65,8 +65,7 @@ SASSLineInfo FuncInfo::searchOffset(int offset) {
         cout << "   Code: " << *iter->second.code << endl;
 
         cout << "   GPR status: ";
-        vector<int> reg_status = iter->second.reg_GPR.reg_status;
-        cout << "size: " << reg_status.size();
+        vector<int> reg_status = iter->second.reg_GPR->reg_status;
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:
@@ -88,7 +87,7 @@ SASSLineInfo FuncInfo::searchOffset(int offset) {
         cout << endl;
 
         cout << "   PRED status: ";
-        reg_status = iter->second.reg_PRED.reg_status;
+        reg_status = iter->second.reg_PRED->reg_status;
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:
@@ -110,7 +109,7 @@ SASSLineInfo FuncInfo::searchOffset(int offset) {
         cout << endl;
 
         cout << "   UGPR status: ";
-        reg_status = iter->second.reg_UGPR.reg_status;
+        reg_status = iter->second.reg_UGPR->reg_status;
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:
@@ -132,7 +131,7 @@ SASSLineInfo FuncInfo::searchOffset(int offset) {
         cout << endl;
 
         cout << "   UPRED status: ";
-        reg_status = iter->second.reg_UPRED.reg_status;
+        reg_status = iter->second.reg_UPRED->reg_status;
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:
@@ -205,7 +204,7 @@ void FuncInfo::printOffset() {
         cout << "   Code: " << *iter->second.code << endl;
 
         cout << "   GPR status: ";
-        vector<int> reg_status = iter->second.reg_GPR.reg_status;
+        vector<int> reg_status = iter->second.reg_GPR->reg_status;
         for (int i = 0; i < reg_status.size(); i++) {
             switch (reg_status[i]) {
                 case 0:

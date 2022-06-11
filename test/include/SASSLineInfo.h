@@ -12,10 +12,10 @@ struct SASSLineInfo{
     int src_line;
     set<string>::iterator code;
     //vector<Register> vec_reg;   //存储寄存器状态     //效率低，改成直接定义所有register如下
-    Register reg_GPR;
-    Register reg_PRED;
-    Register reg_UGPR;
-    Register reg_UPRED;
+    Register *reg_GPR;
+    Register *reg_PRED;
+    Register *reg_UGPR;
+    Register *reg_UPRED;
 };
 
 #endif //TEST_SASSLINEINFO_H
