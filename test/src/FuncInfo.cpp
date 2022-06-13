@@ -48,15 +48,6 @@ void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string cod
 
     this->map_offset_src.insert(pair<int, struct SASSLineInfo>(offset, sassLine_info));
 
-//    cout << "status size: " << reg_GPR->reg_status.size() << endl;
-//    cout << "status size: " << reg_PRED->reg_status.size() << endl;
-//    cout << "status size: " << reg_UGPR->reg_status.size() << endl;
-//    cout << "status size: " << reg_UPRED->reg_status.size() << endl;
-
-    cout << "====status size: " << this->map_offset_src[0].reg_GPR->reg_status.size() << endl;
-    cout << "====status size: " << this->map_offset_src[0].reg_PRED->reg_status.size() << endl;
-    cout << "====status size: " << this->map_offset_src[0].reg_UGPR->reg_status.size() << endl;
-    cout << "====status size: " << this->map_offset_src[0].reg_UPRED->reg_status.size() << endl;
 
 }
 

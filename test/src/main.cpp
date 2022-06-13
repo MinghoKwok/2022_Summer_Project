@@ -143,15 +143,15 @@ vector<FuncInfo> mapOffset(string dataPath) {
             Register *reg_GPR = new Register();
             reg_GPR->size = reg_GPR_size;
             reg_GPR->name = "GPR";
-            Register reg_PRED;
-            reg_PRED.size = reg_PRED_size;
-            reg_PRED.name = "PRED";
-            Register reg_UGPR;
-            reg_UGPR.size = reg_UGPR_size;
-            reg_UGPR.name = "UGPR";
-            Register reg_UPRED;
-            reg_UPRED.size = reg_UPRED_size;
-            reg_UPRED.name = "UPRED";
+            Register *reg_PRED = new Register();
+            reg_PRED->size = reg_PRED_size;
+            reg_PRED->name = "PRED";
+            Register *reg_UGPR = new Register();
+            reg_UGPR->size = reg_UGPR_size;
+            reg_UGPR->name = "UGPR";
+            Register *reg_UPRED = new Register();
+            reg_UPRED->size = reg_UPRED_size;
+            reg_UPRED->name = "UPRED";
             vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
             if (!reg_status.empty()) {
  //               cout << reg_status[1][8] << endl;  // GPR
@@ -196,29 +196,29 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 }
 
                 if (str_PRED.empty()) {  // no reg_PRED used now
-                    reg_PRED.occupied_count = 0;
-                    vector<int> reg_s(reg_PRED.size, 0);
-                    reg_PRED.reg_status = reg_s;
+                    reg_PRED->occupied_count = 0;
+                    vector<int> reg_s(reg_PRED->size, 0);
+                    reg_PRED->reg_status = reg_s;
                 } else {
-                    reg_PRED.occupied_count = str_PRED[0] - '0';
+                    reg_PRED->occupied_count = str_PRED[0] - '0';
                     int start = 0;
-                    for (int i = 0; i < reg_PRED.size; i++) {
+                    for (int i = 0; i < reg_PRED->size; i++) {
                         int index = start + 1 + to_string(i).size();
                         switch (str_PRED[index]) {
                             case ' ':
-                                reg_PRED.reg_status.push_back(0);
+                                reg_PRED->reg_status.push_back(0);
                                 break;
                             case '^':
-                                reg_PRED.reg_status.push_back(1);
+                                reg_PRED->reg_status.push_back(1);
                                 break;
                             case 'v':
-                                reg_PRED.reg_status.push_back(2);
+                                reg_PRED->reg_status.push_back(2);
                                 break;
                             case 'x':
-                                reg_PRED.reg_status.push_back(3);
+                                reg_PRED->reg_status.push_back(3);
                                 break;
                             case ':':
-                                reg_PRED.reg_status.push_back(4);
+                                reg_PRED->reg_status.push_back(4);
                                 break;
                             default:
                                 cout << "Error: Unidentify:" << str_PRED[index] << endl;
@@ -227,30 +227,30 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 }
 
                 if (str_UGPR.empty()) {  // no reg_UGPR used now
-                    reg_UGPR.occupied_count = 0;
-                    vector<int> reg_s(reg_UGPR.size, 0);
-                    reg_UGPR.reg_status = reg_s;
+                    reg_UGPR->occupied_count = 0;
+                    vector<int> reg_s(reg_UGPR->size, 0);
+                    reg_UGPR->reg_status = reg_s;
                 } else {
-                    reg_UGPR.occupied_count = str_UGPR[0] - '0';
+                    reg_UGPR->occupied_count = str_UGPR[0] - '0';
                     int start = 0;
-                    for (int i = 1; i <= reg_UGPR.size; i++) {
+                    for (int i = 1; i <= reg_UGPR->size; i++) {
                         int index = start + i * 2;
                         //cout << str_UGPR[index] << endl;
                         switch (str_UGPR[index]) {
                             case ' ':
-                                reg_UGPR.reg_status.push_back(0);
+                                reg_UGPR->reg_status.push_back(0);
                                 break;
                             case '^':
-                                reg_UGPR.reg_status.push_back(1);
+                                reg_UGPR->reg_status.push_back(1);
                                 break;
                             case 'v':
-                                reg_UGPR.reg_status.push_back(2);
+                                reg_UGPR->reg_status.push_back(2);
                                 break;
                             case 'x':
-                                reg_UGPR.reg_status.push_back(3);
+                                reg_UGPR->reg_status.push_back(3);
                                 break;
                             case ':':
-                                reg_UGPR.reg_status.push_back(4);
+                                reg_UGPR->reg_status.push_back(4);
                                 break;
                             default:
                                 cout << "Error: Unidentify:" << str_UGPR[index] << endl;
@@ -259,29 +259,29 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 }
 
                 if (str_UPRED.empty()) {  // no reg_UPRED used now
-                    reg_UPRED.occupied_count = 0;
-                    vector<int> reg_s(reg_UPRED.size, 0);
-                    reg_UPRED.reg_status = reg_s;
+                    reg_UPRED->occupied_count = 0;
+                    vector<int> reg_s(reg_UPRED->size, 0);
+                    reg_UPRED->reg_status = reg_s;
                 } else {
-                    reg_UPRED.occupied_count = str_UPRED[0] - '0';
+                    reg_UPRED->occupied_count = str_UPRED[0] - '0';
                     int start = 0;
-                    for (int i = 0; i < reg_UPRED.size; i++) {
+                    for (int i = 0; i < reg_UPRED->size; i++) {
                         int index = start + 1 + to_string(i).size();
                         switch (str_UPRED[index]) {
                             case ' ':
-                                reg_UPRED.reg_status.push_back(0);
+                                reg_UPRED->reg_status.push_back(0);
                                 break;
                             case '^':
-                                reg_UPRED.reg_status.push_back(1);
+                                reg_UPRED->reg_status.push_back(1);
                                 break;
                             case 'v':
-                                reg_UPRED.reg_status.push_back(2);
+                                reg_UPRED->reg_status.push_back(2);
                                 break;
                             case 'x':
-                                reg_UPRED.reg_status.push_back(3);
+                                reg_UPRED->reg_status.push_back(3);
                                 break;
                             case ':':
-                                reg_UPRED.reg_status.push_back(4);
+                                reg_UPRED->reg_status.push_back(4);
                                 break;
                             default:
                                 cout << "Error: Unidentify:" << str_UPRED[index] << endl;
@@ -296,7 +296,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
             //  add to the object
 
             cout << "==reg_GPR.reg_status: " << reg_GPR->reg_status.size() << endl;
-            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, &reg_PRED, &reg_UGPR, &reg_UPRED);
+            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
 
 //            for (int i = 0; i < reg_GPR.reg_status.size(); i++) {
 //                cout << reg_GPR.reg_status[i] << " ";
