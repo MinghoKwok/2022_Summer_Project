@@ -91,9 +91,8 @@ vector<string> splitCode(string code) { // 后续考虑并入类中             
 }
 
 // 参数 offset, kernel name
-void analyzeCode(FuncInfo FI) {
-    int search_index = 0;
-    SASSLineInfo SI = FI.searchOffset(search_index);
+void analyzeCode(FuncInfo FI, int search_offset) {
+    SASSLineInfo SI = FI.searchOffset(search_offset);
     Register *reg_GPR = SI.reg_GPR;
     string code = *SI.code;
     //cout << code << endl << endl;
@@ -118,8 +117,8 @@ void analyzeCode(FuncInfo FI) {
 
         // find where this reg is used (read)
         bool found = false;
-        for (search_index += 0x10; search_index <= (FI.getOffsetSrc().size() - 1) * 0x10; search_index += 0x10) { // 16 -> 0x10
-            SI = FI.searchOffset(search_index);
+        for (search_offset += 0x10; search_offset <= (FI.getOffsetSrc().size() - 1) * 0x10; search_offset += 0x10) { // 16 -> 0x10
+            SI = FI.searchOffset(search_offset);
             reg_GPR = SI.reg_GPR;
             if ((reg_GPR->reg_status[reg_write] & 0x2) == 0x2) { // 2 -> 读 v, 3 -> 读+写 x     // & 0x2
                 found = true;
@@ -169,4 +168,14 @@ int regCount(string numStr) {
         continue;
 
     return atoi(num.c_str()) + 1;
+}
+
+bool ifContainsWide(string code) {
+    stringstream sscode(code);
+    string token;
+    while (getline(sscode, token, '.')) {
+        if (token == "WIDE")
+            return true;
+    }
+    return false;
 }
