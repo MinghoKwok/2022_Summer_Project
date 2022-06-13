@@ -80,7 +80,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
             }
 
             string str(function_name[0]);
-            FuncInfo *tempObj = new FuncInfo(str);
+            FuncInfo *tempObj = new FuncInfo(str);  // 改存 stack 为 heap
             FI = tempObj;
             filePath = "no src file";
             fileLine = "-1";
@@ -140,16 +140,16 @@ vector<FuncInfo> mapOffset(string dataPath) {
             //outfile << "Offset: " << offset << "       Assembly Code: " << code << "\n";
 
             // construct register
-            Register *reg_GPR = new Register();
+            auto *reg_GPR = new Register();
             reg_GPR->size = reg_GPR_size;
             reg_GPR->name = "GPR";
-            Register *reg_PRED = new Register();
+            auto *reg_PRED = new Register();
             reg_PRED->size = reg_PRED_size;
             reg_PRED->name = "PRED";
-            Register *reg_UGPR = new Register();
+            auto *reg_UGPR = new Register();
             reg_UGPR->size = reg_UGPR_size;
             reg_UGPR->name = "UGPR";
-            Register *reg_UPRED = new Register();
+            auto *reg_UPRED = new Register();
             reg_UPRED->size = reg_UPRED_size;
             reg_UPRED->name = "UPRED";
             vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
@@ -294,17 +294,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
             }
 
             //  add to the object
-
-            cout << "==reg_GPR.reg_status: " << reg_GPR->reg_status.size() << endl;
             FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
-
-//            for (int i = 0; i < reg_GPR.reg_status.size(); i++) {
-//                cout << reg_GPR.reg_status[i] << " ";
-//            }
-//            cout << endl;
-
-//            int GPRsize = FI->searchOffset(0).reg_GPR->reg_status.size();
-//            cout << "FI reg_GPR.reg_status[1]:" << GPRsize << endl;
         }
 
     }
@@ -312,7 +302,6 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
 
     if (FI != nullptr) {
-        cout << FI->getFuncName() << endl;
         vec_FuncInfos.push_back(*FI);
         //map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
     }
@@ -331,11 +320,6 @@ vector<FuncInfo> mapOffset(string dataPath) {
      */
 
     cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
-    int gpr_size = vec_FuncInfos[0].searchOffset(0).reg_GPR->size;
-    int pred_size = vec_FuncInfos[0].searchOffset(0).reg_PRED->size;
-    cout << "vec GPR: " << gpr_size << endl;
-    cout << "vec PRED: " << pred_size << endl;
-    cout << endl;
 
     for (int i = 0; i < vec_FuncInfos.size(); i++) {
         cout << vec_FuncInfos[i].getFuncName() << endl;
