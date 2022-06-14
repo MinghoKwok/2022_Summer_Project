@@ -156,20 +156,23 @@ vector<FuncInfo> mapOffset(string dataPath) {
             if (!reg_status.empty()) {
  //               cout << reg_status[1][8] << endl;  // GPR
 //                cout << reg_status[2] << endl;  // PRED
-                string str_GPR = reg_status[1]; cout << str_GPR << endl;
+                string str_GPR = reg_status[1];
                 string str_PRED = reg_status[2];
                 string str_UGPR = reg_status[3];
                 string str_UPRED = reg_status[4];
+
+                cout << str_GPR << endl;
 
                 if (str_GPR.empty()) {  // no reg_GPR used now
                     reg_GPR->occupied_count = 0;
                     vector<int> reg_s(reg_GPR->size, 0);
                     reg_GPR->reg_status = reg_s;
                 } else {
-                    reg_GPR->occupied_count = str_GPR[0] - '0';
-                    int start = 0;
-                    for (int i = 1; i <= reg_GPR->size; i++) {
-                        int index = start + i * 2;
+                    int index = str_GPR.find(' ') - 1;  // active number 的末位
+                    reg_GPR->occupied_count = atoi(str_GPR.substr(0,index + 1).c_str());
+                    cout << "occupied_count: " << reg_GPR->occupied_count << endl;
+                    for (int i = 0; i < reg_GPR->size; i++) {
+                        index = index + 1 + to_string(i).size();
                         //cout << str_GPR[index] << endl;
                         switch (str_GPR[index]) {
                             case ' ':
@@ -324,7 +327,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
         cout << vec_FuncInfos[i].getFuncName() << endl;
         //vec_FuncInfos[i].printSrcFile();          // Print source file and line
         //vec_FuncInfos[i].printOffset();           // Print mappings
-        vec_FuncInfos[i].searchOffset(0);       // Test search offset
+        vec_FuncInfos[i].searchOffset(16);       // Test search offset
     }
 
 
