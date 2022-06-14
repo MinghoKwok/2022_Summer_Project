@@ -8,7 +8,7 @@ using namespace std;
 int hexToInt(string str);
 
 vector<string> splitCode(string code);
-void analyzeCode(FuncInfo FI, int search_offset);
+void searchOffset(FuncInfo FI, int search_offset);
 int regCount(string numStr);
 bool ifContainsWide(string code);
 

@@ -13,7 +13,7 @@ vector<FuncInfo> mapOffset(string dataPath);
 int main() {
 
     // mapOffset
-    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro1.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
+    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro.head_10000.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
     //cout << "Size: " << map_FuncInfos.size() << endl;
     //cout << "KEY: " << map_FuncInfos.begin()->first << endl;
     //cout << "Func Name" << map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"].getFuncName() << endl;
@@ -233,7 +233,6 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 } else {
                     int index = str_UGPR.find(' ') - 1;  // active number 的末位
                     reg_UGPR->occupied_count = atoi(str_UGPR.substr(0,index + 1).c_str());
-                    cout << "reg_UGPR->occupied_count:" << reg_UGPR->occupied_count << endl;
                     for (int i = 0; i < reg_UGPR->size; i++) {
                         index = index + 1 + to_string(i).size();
                         switch (str_UGPR[index]) {
@@ -325,7 +324,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
         cout << vec_FuncInfos[i].getFuncName() << endl;
         //vec_FuncInfos[i].printSrcFile();          // Print source file and line
         //vec_FuncInfos[i].printOffset();           // Print mappings
-        vec_FuncInfos[i].searchOffset(16);       // Test search offset
+        vec_FuncInfos[i].searchOffset(32);       // Test search offset
     }
 
 
