@@ -13,7 +13,7 @@ vector<FuncInfo> mapOffset(string dataPath);
 int main() {
 
     // mapOffset
-    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro0.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
+    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro1.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
     //cout << "Size: " << map_FuncInfos.size() << endl;
     //cout << "KEY: " << map_FuncInfos.begin()->first << endl;
     //cout << "Func Name" << map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"].getFuncName() << endl;
@@ -118,11 +118,11 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
 
         // match src file and corresponding line
-        vector<string> src_file = getMatch("( *)//## File \"(.*)\", line ([0-9]*)(.*)", tempStr);     // 去掉前后空白
+        vector<string> src_file = getMatch("((\\s|\\t)*)\\/\\/## File \"(.*)\", line ([0-9]*)(.*)", tempStr);     // 去掉前后空白
         if (!src_file.empty()) {
 
-            filePath = src_file[1];
-            fileLine = src_file[2];
+            filePath = src_file[2];
+            fileLine = src_file[3];
             cout << "Source File    Name: " << filePath << "       Line: " << fileLine << endl;
             FI->addSrcFile(filePath, fileLine);
         }
@@ -191,7 +191,6 @@ vector<FuncInfo> mapOffset(string dataPath) {
                                 cout << "Error: Unidentify:" << str_GPR[index] << endl;
                         }
                     }
-
 
                 }
 
@@ -325,7 +324,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
         cout << vec_FuncInfos[i].getFuncName() << endl;
         //vec_FuncInfos[i].printSrcFile();          // Print source file and line
         //vec_FuncInfos[i].printOffset();           // Print mappings
-        vec_FuncInfos[i].searchOffset(16);       // Test search offset
+        vec_FuncInfos[i].searchOffset(0);       // Test search offset
     }
 
 
