@@ -5,7 +5,7 @@
 using namespace std;
 
 const vector<string> AssembFunc = {
-//        the followings are integer instructions.
+//      the followings are integer instructions.
                                     "IMAD",
                                    "IMADSP",
                                    "IMUL",
@@ -24,7 +24,7 @@ const vector<string> AssembFunc = {
                                    "ISETP",
                                    "ICMP",
                                    "POPC",
-//    the following are FP32 instructions
+//      the following are FP32 instructions
                                    "FFMA",
                                    "FADD",
                                    "FCMP",
@@ -35,7 +35,7 @@ const vector<string> AssembFunc = {
                                    "FSETP",
                                    "FCHK",
                                    "RRO",
-//                                   the following are FP64 instructions
+//      the following are FP64 instructions
                                    "MUFU",
                                    "DFMA",
                                    "DADD",
@@ -72,7 +72,7 @@ vector<string> splitCode(string code) { // 后续考虑并入类中             
             }
         } else {
             if (code[i] == ',' || code[i] == ' ' || code[i] == ';') {
-                if (str.find("@") == str.npos)
+                if (str[0] != '@')
                     vec_code.push_back(str);
                 str = "";
             } else {

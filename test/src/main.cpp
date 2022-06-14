@@ -13,24 +13,11 @@ map<string, FuncInfo> mapOffset(string dataPath);
 int main() {
 
     // mapOffset
-    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/castro.head_10000.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
-    //cout << "Size: " << map_FuncInfos.size() << endl;
-    //cout << "KEY: " << map_FuncInfos.begin()->first << endl;
-    //cout << "Func Name" << map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"].getFuncName() << endl;
+    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/castro1.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
+    cout << endl << "Count of kernels: " << map_FuncInfos.size() << endl << endl;
 
-//    FuncInfo FI = map_FuncInfos.begin()->second;
-//    SASSLineInfo SI = FI.searchOffset(0);
-//    cout << "GPR: " << SI.reg_GPR.size << endl;
-
-    /*
-    SASSLineInfo OI = vec_FuncInfos[0].searchOffset(144);
-    Register reg_GPR = OI.reg_GPR;
-    string code = *OI.code;
-    //cout << code << endl << endl;
-    vector<string> vec_code = splitCode(code);
-     */
-    //analyzeCode(map_FuncInfos["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"]);
-    //analyzeCode(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"]);
+    //searchOffset(map_FuncInfos["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"]);
+    searchOffset(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"], 0);
     // 改名 searchOffset
 
     return 0;
@@ -307,6 +294,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 
 
     // Show result (map)
+    /*
     cout << endl << "map_FuncInfos size: " << map_FuncInfos.size() << endl;
     for (auto iter : map_FuncInfos) {
         string funcName = iter.second.getFuncName();
@@ -315,9 +303,10 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 //        for (auto iter1 : iter.second.getOffsetSrc()) {
 //            cout << "Offset: " << iter1.first << "  Code: " << *iter1.second.code << endl;
 //        }
-        map_FuncInfos[funcName].searchOffset(32);
+        map_FuncInfos[funcName].searchOffset(0);
         cout << endl;
     }
+     */
 
 
 //    cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;

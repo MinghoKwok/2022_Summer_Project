@@ -6,7 +6,7 @@
 
 using namespace std;
 
-struct Register{
+struct Register {
     string name;
     int size;
     int occupied_count;
