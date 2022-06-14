@@ -8,7 +8,7 @@ using namespace std;
 
 struct DataType {
     int type;       // 0 -> INT, 1 -> FP
-    int version;    //
+    int version;    // 32, 64
 };
 
 

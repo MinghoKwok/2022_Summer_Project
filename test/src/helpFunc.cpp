@@ -7,42 +7,42 @@ using namespace std;
 const vector<string> AssembFunc = {
 //      the followings are integer instructions.
                                     "IMAD",
-                                   "IMADSP",
-                                   "IMUL",
-                                   "IADD",
-                                   "ISCADD",
-                                   "ISAD",
-                                   "IMNMX",
-                                   "BFE",
-                                   "BFI",
-                                   "SHR",
-                                   "SHL",
-                                   "SHF",
-                                   "LOP",
-                                   "FLO",
-                                   "ISET",
-                                   "ISETP",
-                                   "ICMP",
-                                   "POPC",
+                                    "IMADSP",
+                                    "IMUL",
+                                    "IADD",
+                                    "ISCADD",
+                                    "ISAD",
+                                    "IMNMX",
+                                    "BFE",
+                                    "BFI",
+                                    "SHR",
+                                    "SHL",
+                                    "SHF",
+                                    "LOP",
+                                    "FLO",
+                                    "ISET",
+                                    "ISETP",
+                                    "ICMP",
+                                    "POPC",
 //      the following are FP32 instructions
-                                   "FFMA",
-                                   "FADD",
-                                   "FCMP",
-                                   "FMUL",
-                                   "FMNMX",
-                                   "FSWZ",
-                                   "FSET",
-                                   "FSETP",
-                                   "FCHK",
-                                   "RRO",
+                                    "FFMA",
+                                    "FADD",
+                                    "FCMP",
+                                    "FMUL",
+                                    "FMNMX",
+                                    "FSWZ",
+                                    "FSET",
+                                    "FSETP",
+                                    "FCHK",
+                                    "RRO",
 //      the following are FP64 instructions
-                                   "MUFU",
-                                   "DFMA",
-                                   "DADD",
-                                   "DMUL",
-                                   "DMNMX",
-                                   "DSET",
-                                   "DSETP"
+                                    "MUFU",
+                                    "DFMA",
+                                    "DADD",
+                                    "DMUL",
+                                    "DMNMX",
+                                    "DSET",
+                                    "DSETP"
 };
 
 int hexToInt(string str) {
@@ -98,7 +98,7 @@ void searchOffset(FuncInfo FI, int search_offset) {
     //cout << code << endl << endl;
     vector<string> vec_code = splitCode(code);
 
-    if (vec_code[0].find("LD") != vec_code[0].npos) {   // Load         // 改成 "LDG" 在不在 string 里    // 已知 offset       // store  "ST"
+    if (vec_code[0].find("LDG") != vec_code[0].npos) {   // Load         // 改成 "LDG" 在不在 string 里    // 已知 offset       // store  "ST"
         cout << endl << "Load：" << endl;
 
         // find which reg is used (writen)
@@ -140,14 +140,16 @@ void searchOffset(FuncInfo FI, int search_offset) {
 
 
         // enum / map
-        auto iter = std::find(AssembFunc.begin(), AssembFunc.end(), vec_code[0]);
+        auto iter = std::find(AssembFunc.begin(), AssembFunc.end(), splitFuncType(vec_code[0]));
         if (iter != AssembFunc.end()) {
             int index = distance(AssembFunc.begin(), iter);     // iter - begin
             cout << "index: " << index << endl;
-            if (index >= 18) {
-                cout << "Type is float" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
-            } else {
-                cout << "Type is int" << endl;
+            if (index >= 28) {
+                cout << "Type is FP64" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
+            } else if (index < 28 && index >= 18) {
+                cout << "Type is FP32" << endl;
+            } else { // index < 18
+                cout << "Type is INT" << endl;
             }
         } else {
             // error
@@ -178,4 +180,13 @@ bool ifContainsWide(string code) {
             return true;
     }
     return false;
+}
+
+string splitFuncType(string code) { // like "ISETP.GE.AND"
+    stringstream sscode(code);
+    string token;
+    if (getline(sscode, token, '.'))
+        return token;
+    else
+        return code;
 }

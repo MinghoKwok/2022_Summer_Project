@@ -11,5 +11,6 @@ vector<string> splitCode(string code);
 void searchOffset(FuncInfo FI, int search_offset);
 int regCount(string numStr);
 bool ifContainsWide(string code);
+string splitFuncType(string code);
 
 #endif //TEST_HELPFUNC_H

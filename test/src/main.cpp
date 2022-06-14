@@ -17,7 +17,8 @@ int main() {
     cout << endl << "Count of kernels: " << map_FuncInfos.size() << endl << endl;
 
     //searchOffset(map_FuncInfos["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"]);
-    searchOffset(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"], 0);
+    //searchOffset(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"], 0);
+    searchOffset(map_FuncInfos["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 64);
     // 改名 searchOffset
 
     return 0;
