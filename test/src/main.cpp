@@ -161,8 +161,6 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 string str_UGPR = reg_status[3];
                 string str_UPRED = reg_status[4];
 
-                cout << str_GPR << endl;
-
                 if (str_GPR.empty()) {  // no reg_GPR used now
                     reg_GPR->occupied_count = 0;
                     vector<int> reg_s(reg_GPR->size, 0);
@@ -170,7 +168,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
                 } else {
                     int index = str_GPR.find(' ') - 1;  // active number 的末位
                     reg_GPR->occupied_count = atoi(str_GPR.substr(0,index + 1).c_str());
-                    cout << "occupied_count: " << reg_GPR->occupied_count << endl;
+                    //cout << "GPR occupied_count: " << reg_GPR->occupied_count << endl;
                     for (int i = 0; i < reg_GPR->size; i++) {
                         index = index + 1 + to_string(i).size();
                         //cout << str_GPR[index] << endl;
@@ -202,10 +200,10 @@ vector<FuncInfo> mapOffset(string dataPath) {
                     vector<int> reg_s(reg_PRED->size, 0);
                     reg_PRED->reg_status = reg_s;
                 } else {
-                    reg_PRED->occupied_count = str_PRED[0] - '0';
-                    int start = 0;
+                    int index = str_PRED.find(' ') - 1;  // active number 的末位
+                    reg_PRED->occupied_count = atoi(str_PRED.substr(0,index + 1).c_str());
                     for (int i = 0; i < reg_PRED->size; i++) {
-                        int index = start + 1 + to_string(i).size();
+                        index = index + 1 + to_string(i).size();
                         switch (str_PRED[index]) {
                             case ' ':
                                 reg_PRED->reg_status.push_back(0);
@@ -233,11 +231,11 @@ vector<FuncInfo> mapOffset(string dataPath) {
                     vector<int> reg_s(reg_UGPR->size, 0);
                     reg_UGPR->reg_status = reg_s;
                 } else {
-                    reg_UGPR->occupied_count = str_UGPR[0] - '0';
-                    int start = 0;
-                    for (int i = 1; i <= reg_UGPR->size; i++) {
-                        int index = start + i * 2;
-                        //cout << str_UGPR[index] << endl;
+                    int index = str_UGPR.find(' ') - 1;  // active number 的末位
+                    reg_UGPR->occupied_count = atoi(str_UGPR.substr(0,index + 1).c_str());
+                    cout << "reg_UGPR->occupied_count:" << reg_UGPR->occupied_count << endl;
+                    for (int i = 0; i < reg_UGPR->size; i++) {
+                        index = index + 1 + to_string(i).size();
                         switch (str_UGPR[index]) {
                             case ' ':
                                 reg_UGPR->reg_status.push_back(0);
@@ -265,10 +263,10 @@ vector<FuncInfo> mapOffset(string dataPath) {
                     vector<int> reg_s(reg_UPRED->size, 0);
                     reg_UPRED->reg_status = reg_s;
                 } else {
-                    reg_UPRED->occupied_count = str_UPRED[0] - '0';
-                    int start = 0;
+                    int index = str_UPRED.find(' ') - 1;  // active number 的末位
+                    reg_UPRED->occupied_count = atoi(str_UPRED.substr(0,index + 1).c_str());
                     for (int i = 0; i < reg_UPRED->size; i++) {
-                        int index = start + 1 + to_string(i).size();
+                        index = index + 1 + to_string(i).size();
                         switch (str_UPRED[index]) {
                             case ' ':
                                 reg_UPRED->reg_status.push_back(0);
