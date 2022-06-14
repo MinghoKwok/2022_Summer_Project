@@ -8,12 +8,12 @@
 // include lib.h  lib.cpp（写init）
 using namespace std;
 
-vector<FuncInfo> mapOffset(string dataPath);
+map<string, FuncInfo> mapOffset(string dataPath);
                                                                                     // 下周一测试更多txt
 int main() {
 
     // mapOffset
-    vector<FuncInfo> vec_FuncInfos = mapOffset("../data/castro.head_10000.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
+    map<string, FuncInfo> map_FuncInfos = mapOffset("../data/castro.head_10000.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
     //cout << "Size: " << map_FuncInfos.size() << endl;
     //cout << "KEY: " << map_FuncInfos.begin()->first << endl;
     //cout << "Func Name" << map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"].getFuncName() << endl;
@@ -36,7 +36,7 @@ int main() {
     return 0;
 }
 
-vector<FuncInfo> mapOffset(string dataPath) {
+map<string, FuncInfo> mapOffset(string dataPath) {
 
 
     ifstream myfile (dataPath);
@@ -60,7 +60,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
     // Analyze line by line
     FuncInfo *FI = nullptr;
-    //map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map  增加时，如果发现key已经存在，报错
+    map<string, FuncInfo> map_FuncInfos; // function name -> FuncInfo Objects   //vector还是map  增加时，如果发现key已经存在，报错
     vector<FuncInfo> vec_FuncInfos;
 
     string filePath = "no src file";
@@ -75,7 +75,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
         if (!function_name.empty()) {   // match 到 function 了
             if (FI != nullptr) {
                 vec_FuncInfos.push_back(*FI);
-                //map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+                map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
                 //cout << "test: " << map_FuncInfos[FI->getFuncName()].getFuncName() << endl;
             }
 
@@ -91,7 +91,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
             reg_UPRED_size = -1;
             //FI->addSrcFile(filePath, fileLine);       //报139错
 
-            cout << "test2: " << FI->getFuncName() << endl;
+            cout << "Create: " << FI->getFuncName() << endl;
         }
 
 
@@ -104,13 +104,13 @@ vector<FuncInfo> mapOffset(string dataPath) {
         vector<string> reg_count = getMatch("(.*)\\/\\/ \\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|\\s*#(.*)\\s+\\|", tempStr);
         if (!reg_count.empty()) {
             reg_GPR_size = regCount(reg_count[1]);
-            cout << "reg_GPR_size: " << reg_GPR_size << endl;
+            //cout << "reg_GPR_size: " << reg_GPR_size << endl;
             reg_PRED_size = regCount(reg_count[2]);
-            cout << "reg_PRED_size: " << reg_PRED_size << endl;
+            //cout << "reg_PRED_size: " << reg_PRED_size << endl;
             reg_UGPR_size = regCount(reg_count[3]);
-            cout << "reg_UGPR_size: " << reg_UGPR_size << endl;
+            //cout << "reg_UGPR_size: " << reg_UGPR_size << endl;
             reg_UPRED_size = regCount(reg_count[4]);
-            cout << "reg_UPRED_size: " << reg_UPRED_size << endl;
+            //cout << "reg_UPRED_size: " << reg_UPRED_size << endl;
 
 
         }
@@ -123,7 +123,7 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
             filePath = src_file[2];
             fileLine = src_file[3];
-            cout << "Source File    Name: " << filePath << "       Line: " << fileLine << endl;
+            cout << "   Source File    Name: " << filePath << "       Line: " << fileLine << endl;
             FI->addSrcFile(filePath, fileLine);
         }
 
@@ -302,30 +302,32 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
     if (FI != nullptr) {
         vec_FuncInfos.push_back(*FI);
-        //map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
+        map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
     }
 
 
     // Show result (map)
-    /*
+    cout << endl << "map_FuncInfos size: " << map_FuncInfos.size() << endl;
     for (auto iter : map_FuncInfos) {
-        cout << "Function Name: " << iter.second.getFuncName() << endl;
+        string funcName = iter.second.getFuncName();
+        cout << "Function Name: " << funcName << endl;
         //iter.second.printOffset();
 //        for (auto iter1 : iter.second.getOffsetSrc()) {
 //            cout << "Offset: " << iter1.first << "  Code: " << *iter1.second.code << endl;
 //        }
-        cout << endl << endl;
+        map_FuncInfos[funcName].searchOffset(32);
+        cout << endl;
     }
-     */
 
-    cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
 
-    for (int i = 0; i < vec_FuncInfos.size(); i++) {
-        cout << vec_FuncInfos[i].getFuncName() << endl;
-        //vec_FuncInfos[i].printSrcFile();          // Print source file and line
-        //vec_FuncInfos[i].printOffset();           // Print mappings
-        vec_FuncInfos[i].searchOffset(32);       // Test search offset
-    }
+//    cout << "vec_FuncInfos size: " << vec_FuncInfos.size() << endl;
+//
+//    for (int i = 0; i < vec_FuncInfos.size(); i++) {
+//        cout << vec_FuncInfos[i].getFuncName() << endl;
+//        //vec_FuncInfos[i].printSrcFile();          // Print source file and line
+//        //vec_FuncInfos[i].printOffset();           // Print mappings
+//        vec_FuncInfos[i].searchOffset(32);       // Test search offset
+//    }
 
 
 
@@ -336,5 +338,5 @@ vector<FuncInfo> mapOffset(string dataPath) {
 
 
 
-    return vec_FuncInfos;
+    return map_FuncInfos;
 }
