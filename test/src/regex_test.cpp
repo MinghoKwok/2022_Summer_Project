@@ -10,8 +10,8 @@ vector<string> getMatch(string reg, string inputStr)
 {
 
 
-    std::regex ip_reg(reg);
-    std::smatch matchResult;
+    regex ip_reg(reg);
+    smatch matchResult;
     vector<string> res;
 
 
@@ -20,7 +20,7 @@ vector<string> getMatch(string reg, string inputStr)
 
 
     //正则匹配
-    if (std::regex_match(inputStr,matchResult,ip_reg))
+    if (regex_match(inputStr,matchResult,ip_reg))
     {
         //cout << "Match: " << endl;
         for (size_t i = 1; i < matchResult.size(); ++i)
@@ -28,9 +28,7 @@ vector<string> getMatch(string reg, string inputStr)
             //cout << matchResult[i] << endl;
             res.push_back((string)matchResult[i]);
         }
-    }
-    else
-    {
+    } else {
         //cout << "Not Match!";
     }
 
@@ -38,9 +36,6 @@ vector<string> getMatch(string reg, string inputStr)
 
 }
 
-vector<string> getSearch(string reg, string inputStr) {
-
-}
 
 void regex_test() {
 

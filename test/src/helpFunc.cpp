@@ -98,7 +98,8 @@ void searchOffset(FuncInfo FI, int search_offset) {
     //cout << code << endl << endl;
     vector<string> vec_code = splitCode(code);
 
-    if (vec_code[0].find("LDG") != vec_code[0].npos) {   // Load         // 改成 "LDG" 在不在 string 里    // 已知 offset       // store  "ST"
+    string funcType = splitFuncType(vec_code[0]);   // split by '.',  get the "LDG" from "LDG.E.64"
+    if (funcType == "LDG" || funcType == "LD") {   // Load         // 改成 "LDG" 在不在 string 里    // 已知 offset       // store  "ST"
         cout << endl << "Load：" << endl;
 
         // find which reg is used (writen)
@@ -134,10 +135,6 @@ void searchOffset(FuncInfo FI, int search_offset) {
         code = *SI.code;
         vec_code = splitCode(code);
 
-//        if (vec_code[0] == "FADD") {
-//            cout << "Type is float" << endl;
-//        }
-
 
         // enum / map
         auto iter = std::find(AssembFunc.begin(), AssembFunc.end(), splitFuncType(vec_code[0]));
@@ -159,6 +156,51 @@ void searchOffset(FuncInfo FI, int search_offset) {
 
     }
 
+    if (funcType == "STG" || funcType == "ST") {    // Store
+        cout << endl << "Store：" << endl;
+
+        // find which reg is used (read)
+        string get_reg = vec_code[2];  // "STG.E.64 [R14.64], R8;" 的 R8
+        int reg_getData = atoi(get_reg.substr(1).c_str());
+        if (reg_getData < 0 || reg_getData >= reg_GPR->size) {
+            cout << "ERROR: Index of STG wrong." << endl;
+        }
+
+        // find when this reg is written
+        bool found = false;
+        for (search_offset -= 0x10; search_offset >= 0x00; search_offset -= 0x10) { // 16 -> 0x10
+            SI = FI.searchOffset(search_offset);
+            reg_GPR = SI.reg_GPR;
+            if ((reg_GPR->reg_status[reg_getData] & 0x1) == 0x1) { // 1 -> 写 ^, 3 -> 读+写 x
+                found = true;
+                break;  // find the read line
+            }
+        }
+
+        // if 没找到  error
+        if (!found) {
+            cout << "ERROR: Not found where the register just read is written before storing process." << endl;
+        }
+
+        code = *SI.code;
+        vec_code = splitCode(code);
+
+        auto iter = std::find(AssembFunc.begin(), AssembFunc.end(), splitFuncType(vec_code[0]));
+        if (iter != AssembFunc.end()) {
+            int index = distance(AssembFunc.begin(), iter);     // iter - begin
+            cout << "index: " << index << endl;
+            if (index >= 28) {
+                cout << "Type is FP64" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
+            } else if (index < 28 && index >= 18) {
+                cout << "Type is FP32" << endl;
+            } else { // index < 18
+                cout << "Type is INT" << endl;
+            }
+        } else {
+            // error
+            cout << "ERROR: Not found this function in the set." << endl;
+        }
+    }
 
 }
 
@@ -190,3 +232,5 @@ string splitFuncType(string code) { // like "ISETP.GE.AND"
     else
         return code;
 }
+
+

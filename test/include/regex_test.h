@@ -10,7 +10,6 @@
 using namespace std;
 
 vector<string> getMatch(string reg, string inputStr);
-vector<string> getSearch(string reg, string inputStr);
 
 void regex_test();
 
