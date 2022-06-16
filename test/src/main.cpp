@@ -57,10 +57,14 @@ map<string, FuncInfo> mapOffset(string dataPath) {
     while (getline(myfile, tempStr)) {
         if (tempStr.empty())
             continue;
+        tempStr.erase(0, tempStr.find_first_not_of(" "));
+        if (tempStr[0] == '.')
+            continue;
+        // if (tempStr[0] == '/' && tempStr.find("#") == tempStr.npos)
 
-        if (tempStr[8] == '/') {    // if (tempStr.find("/*") != tempStr.npos)
+        if (tempStr[1] == '*' && tempStr[0] == '/') {    // if (tempStr.find("/*") != tempStr.npos)
             // match offset and assembly code
-            vector<string> offset_code = getMatch("\\s*/\\*(.*)\\*/( +)(.*); (.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);
+            vector<string> offset_code = getMatch("/\\*(.*)\\*/( +)(.*); (.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);
             if (!offset_code.empty()) {
                 FI->addSrcFile(filePath, fileLine);     //解决没有源文件情形，不知道为什么加在前面会报139错
 
@@ -219,24 +223,14 @@ map<string, FuncInfo> mapOffset(string dataPath) {
                 continue;
             }
 
-        } else {
-            // match src file and corresponding line
-            vector<string> src_file = getMatch("((\\s|\\t)*)\\/\\/## File \"(.*)\", line ([0-9]*)(.*)", tempStr);     //补上 else 排除
-            if (!src_file.empty()) {
-                filePath = src_file[2];
-                fileLine = src_file[3];
-                cout << "   Source File    Name: " << filePath << "       Line: " << fileLine << endl;
-                FI->addSrcFile(filePath, fileLine);
-
-                continue;
-            }
-
-
+        } else if (tempStr[2] == '-') {
             // match function name
             vector<string> function_name = getMatch("//-+ \\.text\\.(.*) -+", tempStr);
             if (!function_name.empty()) {   // match 到 function 了
                 if (FI != nullptr) {
                     //vec_FuncInfos.push_back(*FI);
+                    if (map_FuncInfos.find(FI->getFuncName()) != map_FuncInfos.end())
+                        cout << "ERROR: Kernel Exists!" << endl;
                     map_FuncInfos.insert(pair<string, FuncInfo>(FI->getFuncName(), *FI));
                     //cout << "test: " << map_FuncInfos[FI->getFuncName()].getFuncName() << endl;
                 }
@@ -256,6 +250,20 @@ map<string, FuncInfo> mapOffset(string dataPath) {
                 cout << "Create: " << FI->getFuncName() << endl;
                 continue;
             }
+
+        } else {
+            // match src file and corresponding line
+            vector<string> src_file = getMatch("(\\t*)\\/\\/## File \"(.*)\", line ([0-9]*)(.*)", tempStr);     //补上 else 排除
+            if (!src_file.empty()) {
+                filePath = src_file[1];
+                fileLine = src_file[2];
+                cout << "   Source File    Name: " << filePath << "       Line: " << fileLine << endl;
+                FI->addSrcFile(filePath, fileLine);
+
+                continue;
+            }
+
+
 
 
             // count each register          // 写进function的else
