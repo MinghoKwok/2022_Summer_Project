@@ -37,10 +37,10 @@ map<string, FuncInfo> mapOffset(string dataPath) {
     int reg_PRED_size = -1;
     int reg_UGPR_size = -1;
     int reg_UPRED_size = -1;
-    while (getline(myfile, tempStr)) {
+    while (getline(myfile, tempStr)) {  // 文件整个先读进memory(ifstream stringstream)   切割不同 kernel function，每一块作为input传进： while换成function -》 参数
         if (tempStr.empty())
             continue;
-        tempStr.erase(0, tempStr.find_first_not_of(" "));
+        tempStr.erase(0, tempStr.find_first_not_of(" "));   // find_first_of("/")       不用erase 不新建字符串 substr
         if (tempStr[0] == '.')
             continue;
         // if (tempStr[0] == '/' && tempStr.find("#") == tempStr.npos)
