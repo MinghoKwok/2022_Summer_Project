@@ -103,18 +103,26 @@ void searchOffset(FuncInfo FI, int search_offset) {
         cout << endl << "Load：" << endl;
 
         // find which reg is used (writen)
-        int reg_write = -1;
-        for (int i = 0; i < reg_GPR->reg_status.size(); i++) {
-            if ((reg_GPR->reg_status[i] & 0x1) == 0x1) { // 1 -> 写 ^, 3 -> 读+写 x     // reg_GPR.reg_status[i] & 0x1  // 增加 map<1, reg4> 两者都用
-                reg_write = i;
-                break;
-            }
+        string get_reg = vec_code[1]; // "LDG.E.64 R8, [R16.64] ;" 中的 "R8"
+        int reg_write = atoi(get_reg.substr(1).c_str());
+        if (reg_write < 0 || reg_write >= reg_GPR->size) {
+            cout << "ERROR: Index of LDG wrong." << endl;
         }
 
-        // if reg_write == -1  error
-        if (reg_write == -1) {
-            cout << "ERROR: Not found any register is writen after loading the data." << endl;
-        }
+//        int reg_write = -1;
+//        for (int i = 0; i < reg_GPR->reg_status.size(); i++) {
+//            if ((reg_GPR->reg_status[i] & 0x1) == 0x1) { // 1 -> 写 ^, 3 -> 读+写 x     // reg_GPR.reg_status[i] & 0x1  // 增加 map<1, reg4> 两者都用
+//                reg_write = i;
+//                break;
+//            }
+//        }
+//
+//        // if reg_write == -1  error
+//        if (reg_write == -1) {
+//            cout << "ERROR: Not found any register is writen after loading the data." << endl;
+//        }
+
+
 
         // find where this reg is used (read)
         bool found = false;
@@ -153,10 +161,7 @@ void searchOffset(FuncInfo FI, int search_offset) {
             cout << "ERROR: Not found this function in the set." << endl;
         }
 
-
-    }
-
-    if (funcType == "STG" || funcType == "ST") {    // Store
+    } else if (funcType == "STG" || funcType == "ST") {    // Store
         cout << endl << "Store：" << endl;
 
         // find which reg is used (read)
@@ -200,8 +205,11 @@ void searchOffset(FuncInfo FI, int search_offset) {
             // error
             cout << "ERROR: Not found this function in the set." << endl;
         }
+    } else {
+        cout << "Not LD/LDG/ST/STG" << endl;
     }
 
+    cout << "===============================================" << endl;
 }
 
 // 计算reg个数的辅助函数
