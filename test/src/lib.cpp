@@ -47,164 +47,184 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 
         if (tempStr[1] == '*' && tempStr[0] == '/') {    // if (tempStr.find("/*") != tempStr.npos)
             // match offset and assembly code
-            vector<string> offset_code = getMatch("/\\*(.*)\\*/( +)(.*); (.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);
-            if (!offset_code.empty()) {
-                FI->addSrcFile(filePath, fileLine);     //解决没有源文件情形，不知道为什么加在前面会报139错
+//            vector<string> offset_code = getMatch("/\\*(.*)\\*/( +)(.*); (.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);
+//            if (!offset_code.empty()) {
+//            }
 
-                int offset = hexToInt(offset_code[0]);
-                string code = offset_code[2];
-                //outfile << "Offset: " << offset << "       Assembly Code: " << code << "\n";
+            FI->addSrcFile(filePath, fileLine);     //解决没有源文件情形，不知道为什么加在前面会报139错
 
-                // construct register
-                auto *reg_GPR = new Register();
-                reg_GPR->size = reg_GPR_size;
-                reg_GPR->name = "GPR";
-                auto *reg_PRED = new Register();
-                reg_PRED->size = reg_PRED_size;
-                reg_PRED->name = "PRED";
-                auto *reg_UGPR = new Register();
-                reg_UGPR->size = reg_UGPR_size;
-                reg_UGPR->name = "UGPR";
-                auto *reg_UPRED = new Register();
-                reg_UPRED->size = reg_UPRED_size;
-                reg_UPRED->name = "UPRED";
-                //vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
-                string str_GPR = offset_code[4];
-                string str_PRED = offset_code[5];
-                string str_UGPR = offset_code[6];
-                string str_UPRED = offset_code[7];
+            int offset = hexToInt(tempStr.substr(2, 4));
 
-                if (str_GPR.empty()) {  // no reg_GPR used now
-                    reg_GPR->occupied_count = 0;
-                    vector<int> reg_s(reg_GPR->size, 0);
-                    reg_GPR->reg_status = reg_s;
-                } else {
-                    int index = str_GPR.find(' ') - 1;  // active number 的末位
-                    reg_GPR->occupied_count = atoi(str_GPR.substr(0,index + 1).c_str());
-                    //cout << "GPR occupied_count: " << reg_GPR->occupied_count << endl;
-                    for (int i = 0; i < reg_GPR->size; i++) {
-                        index = index + 1 + to_string(i).size();
-                        //cout << str_GPR[index] << endl;
-                        switch (str_GPR[index]) {
-                            case ' ':
-                                reg_GPR->reg_status.push_back(0);
-                                break;
-                            case '^':
-                                reg_GPR->reg_status.push_back(1);
-                                break;
-                            case 'v':
-                                reg_GPR->reg_status.push_back(2);
-                                break;
-                            case 'x':
-                                reg_GPR->reg_status.push_back(3);
-                                break;
-                            case ':':
-                                reg_GPR->reg_status.push_back(4);
-                                break;
-                            default:
-                                cout << "Error: Unidentify:" << str_GPR[index] << endl;
-                        }
+            // erase 汇编代码之前所有内容
+            tempStr.erase(0, 8);
+            tempStr.erase(0, tempStr.find_first_not_of(" "));
+
+            string code = tempStr.substr(0, tempStr.find_first_of(";"));
+            //outfile << "Offset: " << offset << "       Assembly Code: " << code << "\n";
+
+            // erase 寄存器个数之前所有内容
+            tempStr.erase(0, tempStr.find_first_of("//"));
+            tempStr.erase(0, tempStr.find_first_of("|") + 1);
+            tempStr.erase(0, tempStr.find_first_not_of(" "));
+
+            // construct register
+            auto *reg_GPR = new Register();
+            reg_GPR->size = reg_GPR_size;
+            reg_GPR->name = "GPR";
+            auto *reg_PRED = new Register();
+            reg_PRED->size = reg_PRED_size;
+            reg_PRED->name = "PRED";
+            auto *reg_UGPR = new Register();
+            reg_UGPR->size = reg_UGPR_size;
+            reg_UGPR->name = "UGPR";
+            auto *reg_UPRED = new Register();
+            reg_UPRED->size = reg_UPRED_size;
+            reg_UPRED->name = "UPRED";
+            //vector<string> reg_status = getMatch("(.*)\\/\\/ \\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|\\s*(.*)\\|", tempStr);  // (.*)\/\/ \|\s*(.*)\|\s*(.*)\|    \s* 取代空格
+            string str_GPR = tempStr.substr(0, tempStr.find_first_of("|"));
+            tempStr.erase(0, tempStr.find_first_of("|") + 1);
+            tempStr.erase(0, tempStr.find_first_not_of(" "));
+            string str_PRED = tempStr.substr(0, tempStr.find_first_of("|"));
+            tempStr.erase(0, tempStr.find_first_of("|") + 1);
+            tempStr.erase(0, tempStr.find_first_not_of(" "));
+            string str_UGPR = tempStr.substr(0, tempStr.find_first_of("|"));
+            tempStr.erase(0, tempStr.find_first_of("|") + 1);
+            tempStr.erase(0, tempStr.find_first_not_of(" "));
+            string str_UPRED = tempStr.substr(0, tempStr.find_first_of("|"));
+
+
+            if (str_GPR.empty()) {  // no reg_GPR used now
+                reg_GPR->occupied_count = 0;
+                vector<int> reg_s(reg_GPR->size, 0);
+                reg_GPR->reg_status = reg_s;
+                cout << "GPR empty" << endl;
+            } else {
+                cout << "====" << str_GPR << endl;
+                int index = str_GPR.find(' ') - 1;  // active number 的末位
+                reg_GPR->occupied_count = atoi(str_GPR.substr(0,index + 1).c_str());
+                //cout << "GPR occupied_count: " << reg_GPR->occupied_count << endl;
+                for (int i = 0; i < reg_GPR->size; i++) {
+                    index = index + 1 + to_string(i).size();
+                    //cout << str_GPR[index] << endl;
+                    switch (str_GPR[index]) {
+                        case ' ':
+                            reg_GPR->reg_status.push_back(0);
+                            break;
+                        case '^':
+                            reg_GPR->reg_status.push_back(1);
+                            break;
+                        case 'v':
+                            reg_GPR->reg_status.push_back(2);
+                            break;
+                        case 'x':
+                            reg_GPR->reg_status.push_back(3);
+                            break;
+                        case ':':
+                            reg_GPR->reg_status.push_back(4);
+                            break;
+                        default:
+                            cout << "Error: Unidentify:" << str_GPR[index] << endl;
                     }
                 }
-
-                if (str_PRED.empty()) {  // no reg_PRED used now
-                    reg_PRED->occupied_count = 0;
-                    vector<int> reg_s(reg_PRED->size, 0);
-                    reg_PRED->reg_status = reg_s;
-                } else {
-                    int index = str_PRED.find(' ') - 1;  // active number 的末位
-                    reg_PRED->occupied_count = atoi(str_PRED.substr(0,index + 1).c_str());
-                    for (int i = 0; i < reg_PRED->size; i++) {
-                        index = index + 1 + to_string(i).size();
-                        switch (str_PRED[index]) {
-                            case ' ':
-                                reg_PRED->reg_status.push_back(0);
-                                break;
-                            case '^':
-                                reg_PRED->reg_status.push_back(1);
-                                break;
-                            case 'v':
-                                reg_PRED->reg_status.push_back(2);
-                                break;
-                            case 'x':
-                                reg_PRED->reg_status.push_back(3);
-                                break;
-                            case ':':
-                                reg_PRED->reg_status.push_back(4);
-                                break;
-                            default:
-                                cout << "Error: Unidentify:" << str_PRED[index] << endl;
-                        }
-                    }
-                }
-
-                if (str_UGPR.empty()) {  // no reg_UGPR used now
-                    reg_UGPR->occupied_count = 0;
-                    vector<int> reg_s(reg_UGPR->size, 0);
-                    reg_UGPR->reg_status = reg_s;
-                } else {
-                    int index = str_UGPR.find(' ') - 1;  // active number 的末位
-                    reg_UGPR->occupied_count = atoi(str_UGPR.substr(0,index + 1).c_str());
-                    for (int i = 0; i < reg_UGPR->size; i++) {
-                        index = index + 1 + to_string(i).size();
-                        switch (str_UGPR[index]) {
-                            case ' ':
-                                reg_UGPR->reg_status.push_back(0);
-                                break;
-                            case '^':
-                                reg_UGPR->reg_status.push_back(1);
-                                break;
-                            case 'v':
-                                reg_UGPR->reg_status.push_back(2);
-                                break;
-                            case 'x':
-                                reg_UGPR->reg_status.push_back(3);
-                                break;
-                            case ':':
-                                reg_UGPR->reg_status.push_back(4);
-                                break;
-                            default:
-                                cout << "Error: Unidentify:" << str_UGPR[index] << endl;
-                        }
-                    }
-                }
-
-                if (str_UPRED.empty()) {  // no reg_UPRED used now
-                    reg_UPRED->occupied_count = 0;
-                    vector<int> reg_s(reg_UPRED->size, 0);
-                    reg_UPRED->reg_status = reg_s;
-                } else {
-                    int index = str_UPRED.find(' ') - 1;  // active number 的末位
-                    reg_UPRED->occupied_count = atoi(str_UPRED.substr(0,index + 1).c_str());
-                    for (int i = 0; i < reg_UPRED->size; i++) {
-                        index = index + 1 + to_string(i).size();
-                        switch (str_UPRED[index]) {
-                            case ' ':
-                                reg_UPRED->reg_status.push_back(0);
-                                break;
-                            case '^':
-                                reg_UPRED->reg_status.push_back(1);
-                                break;
-                            case 'v':
-                                reg_UPRED->reg_status.push_back(2);
-                                break;
-                            case 'x':
-                                reg_UPRED->reg_status.push_back(3);
-                                break;
-                            case ':':
-                                reg_UPRED->reg_status.push_back(4);
-                                break;
-                            default:
-                                cout << "Error: Unidentify:" << str_UPRED[index] << endl;
-                        }
-                    }
-                }
-
-                //  add to the object
-                FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
-
-                continue;
             }
+
+            if (str_PRED.empty()) {  // no reg_PRED used now
+                reg_PRED->occupied_count = 0;
+                vector<int> reg_s(reg_PRED->size, 0);
+                reg_PRED->reg_status = reg_s;
+            } else {
+                int index = str_PRED.find(' ') - 1;  // active number 的末位
+                reg_PRED->occupied_count = atoi(str_PRED.substr(0,index + 1).c_str());
+                for (int i = 0; i < reg_PRED->size; i++) {
+                    index = index + 1 + to_string(i).size();
+                    switch (str_PRED[index]) {
+                        case ' ':
+                            reg_PRED->reg_status.push_back(0);
+                            break;
+                        case '^':
+                            reg_PRED->reg_status.push_back(1);
+                            break;
+                        case 'v':
+                            reg_PRED->reg_status.push_back(2);
+                            break;
+                        case 'x':
+                            reg_PRED->reg_status.push_back(3);
+                            break;
+                        case ':':
+                            reg_PRED->reg_status.push_back(4);
+                            break;
+                        default:
+                            cout << "Error: Unidentify:" << str_PRED[index] << endl;
+                    }
+                }
+            }
+
+            if (str_UGPR.empty()) {  // no reg_UGPR used now
+                reg_UGPR->occupied_count = 0;
+                vector<int> reg_s(reg_UGPR->size, 0);
+                reg_UGPR->reg_status = reg_s;
+            } else {
+                int index = str_UGPR.find(' ') - 1;  // active number 的末位
+                reg_UGPR->occupied_count = atoi(str_UGPR.substr(0,index + 1).c_str());
+                for (int i = 0; i < reg_UGPR->size; i++) {
+                    index = index + 1 + to_string(i).size();
+                    switch (str_UGPR[index]) {
+                        case ' ':
+                            reg_UGPR->reg_status.push_back(0);
+                            break;
+                        case '^':
+                            reg_UGPR->reg_status.push_back(1);
+                            break;
+                        case 'v':
+                            reg_UGPR->reg_status.push_back(2);
+                            break;
+                        case 'x':
+                            reg_UGPR->reg_status.push_back(3);
+                            break;
+                        case ':':
+                            reg_UGPR->reg_status.push_back(4);
+                            break;
+                        default:
+                            cout << "Error: Unidentify:" << str_UGPR[index] << endl;
+                    }
+                }
+            }
+
+            if (str_UPRED.empty()) {  // no reg_UPRED used now
+                reg_UPRED->occupied_count = 0;
+                vector<int> reg_s(reg_UPRED->size, 0);
+                reg_UPRED->reg_status = reg_s;
+            } else {
+                int index = str_UPRED.find(' ') - 1;  // active number 的末位
+                reg_UPRED->occupied_count = atoi(str_UPRED.substr(0,index + 1).c_str());
+                for (int i = 0; i < reg_UPRED->size; i++) {
+                    index = index + 1 + to_string(i).size();
+                    switch (str_UPRED[index]) {
+                        case ' ':
+                            reg_UPRED->reg_status.push_back(0);
+                            break;
+                        case '^':
+                            reg_UPRED->reg_status.push_back(1);
+                            break;
+                        case 'v':
+                            reg_UPRED->reg_status.push_back(2);
+                            break;
+                        case 'x':
+                            reg_UPRED->reg_status.push_back(3);
+                            break;
+                        case ':':
+                            reg_UPRED->reg_status.push_back(4);
+                            break;
+                        default:
+                            cout << "Error: Unidentify:" << str_UPRED[index] << endl;
+                    }
+                }
+            }
+
+            //  add to the object
+            FI->addOffsetSrc(offset, filePath, fileLine, code, reg_GPR, reg_PRED, reg_UGPR, reg_UPRED);
+
+            continue;
 
         } else if (tempStr[2] == '-') {
             // match function name
