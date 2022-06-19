@@ -99,7 +99,6 @@ map<string, FuncInfo> mapOffset(string dataPath) {
                 reg_GPR->reg_status = reg_s;
                 cout << "GPR empty" << endl;
             } else {
-                cout << "====" << str_GPR << endl;
                 int index = str_GPR.find(' ') - 1;  // active number 的末位
                 reg_GPR->occupied_count = atoi(str_GPR.substr(0,index + 1).c_str());
                 //cout << "GPR occupied_count: " << reg_GPR->occupied_count << endl;
