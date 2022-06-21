@@ -61,6 +61,7 @@ SASSLineInfo FuncInfo::searchOffset(int offset) {
 
     auto iter = this->map_offset_src.find(offset);
     if (iter == map_offset_src.end()) {
+        cout << "ERROR: Not exists this offset" << endl;
         SASSLineInfo emptySI;
         return emptySI;
     } else {
