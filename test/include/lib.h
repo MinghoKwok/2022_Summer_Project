@@ -2,8 +2,6 @@
 #define TEST_LIB_H
 
 #include <fstream>
-#include <regex>
-#include "../include/regex_test.h"
 #include "../include/FuncInfo.h"
 #include "../include/helpFunc.h"
 
@@ -15,6 +13,6 @@ void init(string path);
 
 map<string, FuncInfo> mapOffset(string dataPath);
 
-void analyzeLines(stringstream *ss);
+//void analyzeLines(stringstream *ss);
 
 #endif //TEST_LIB_H
