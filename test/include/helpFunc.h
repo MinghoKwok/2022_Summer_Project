@@ -2,7 +2,8 @@
 #define TEST_HELPFUNC_H
 #include <iostream>
 #include "FuncInfo.h"
-
+#include <cstring>
+#include <algorithm>
 using namespace std;
 
 int hexToInt(string str);
