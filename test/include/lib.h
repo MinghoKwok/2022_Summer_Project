@@ -15,4 +15,6 @@ void init(string path);
 
 map<string, FuncInfo> mapOffset(string dataPath);
 
+void analyzeLines(stringstream *ss);
+
 #endif //TEST_LIB_H

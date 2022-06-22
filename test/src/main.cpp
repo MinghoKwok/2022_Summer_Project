@@ -24,7 +24,10 @@ int main() {
 //    searchOffset(map_FuncInfos["_Z27assisted_activation2_kernelfPfS_S_iii"], 1088);
 //    searchOffset(map_FuncInfos["_Z27assisted_activation2_kernelfPfS_S_iii"], 1584);
 
-
+//    init("../data/sass/darknet.10.sm_86.cubin.sass");
+//    searchOffset(map_FuncInfos["_Z28forward_avgpool_layer_kerneliiiiPfS_"], 672);
+//    searchOffset(map_FuncInfos["_Z28forward_avgpool_layer_kerneliiiiPfS_"], 928);
+//    searchOffset(map_FuncInfos["_Z29backward_avgpool_layer_kerneliiiiPfS_"], 432);
 
     cout << endl << "Count of kernels: " << map_FuncInfos.size() << endl << endl;
 
