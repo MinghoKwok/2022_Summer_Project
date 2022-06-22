@@ -1,4 +1,5 @@
 #include "../include/helpFunc.h"
+#include "../include/DataType.h"
 #include <sstream>
 #include <vector>
 
@@ -92,6 +93,7 @@ vector<string> splitCode(string code) { // 后续考虑并入类中             
 
 // 参数 offset, kernel name
 void searchOffset(FuncInfo FI, int search_offset) {
+    DataType resType;
     SASSLineInfo SI = FI.searchOffset(search_offset);
     Register *reg_GPR = SI.reg_GPR;
     string code = *SI.code;
@@ -196,10 +198,16 @@ void searchOffset(FuncInfo FI, int search_offset) {
             cout << "index: " << index << endl;
             if (index >= 28) {
                 cout << "Type is FP64" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
+                resType.type = 1;
+                resType.version = 64;
             } else if (index < 28 && index >= 18) {
                 cout << "Type is FP32" << endl;
+                resType.type = 1;
+                resType.version = 32;
             } else { // index < 18
                 cout << "Type is INT" << endl;
+                resType.type = 0;
+                resType.version = 0;
             }
         } else {
             // error

@@ -2,6 +2,7 @@
 #include <sstream>
 
 map<string, FuncInfo> map_FuncInfos;
+vector<stringstream*> vec_ss;
 
 void init(string path) {
     map_FuncInfos = mapOffset(path);
@@ -27,7 +28,6 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 
 
     string lineStr;
-    vector<stringstream*> vec_ss;
     stringstream *ss = new stringstream (lineStr);
     while (getline(myfile, lineStr)) {
         if (lineStr.find("//-----") != tempStr.npos) {
