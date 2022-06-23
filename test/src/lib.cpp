@@ -73,7 +73,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
     int reg_PRED_size = -1;
     int reg_UGPR_size = -1;
     int reg_UPRED_size = -1;
-    while (!feof(fp)) {  // 文件整个先读进memory(ifstream stringstream)   切割不同 kernel function，每一块作为input传进： while换成function -》 参数
+    while (!feof(fp)) {  // 文件整个先读进memory(ifstream stringstream)   切割不同 kernel function，每一块作为input传进： while换成function -》 参数  getline(myfile, tempStr)
         fgets(buf, sizeof buf, fp);
         tempStr = buf;
 
