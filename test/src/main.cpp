@@ -9,8 +9,8 @@ int main() {
 
     //init
 
-    //init("../data/castro.head_10000.txt");
-    init("/Users/kwok/Documents/2022_Summer/Materials/castro.txt");
+    init("../data/castro.head_10000.txt");
+    //init("/Users/kwok/Documents/2022_Summer/Materials/castro.txt");
 
 //    init("../data/castro1.txt");      //写成全局变量    // 声明定义在lib  init外面     init("/castro.txt")  init后 searchOffset
 //    searchOffset(map_FuncInfos["_ZN3cub11EmptyKernelIvEEvv"], 0);

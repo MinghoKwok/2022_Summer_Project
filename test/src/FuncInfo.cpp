@@ -22,13 +22,18 @@ string FuncInfo::getFuncName() {
 }
 
 // Src File
-void FuncInfo::addSrcFile(string filePath, string fileLine) {
+void FuncInfo::addSrcFile(string filePath) {
     //this->srcFileSet.insert(filePath.append("     Line: ").append(fileLine));
     this->srcFileSet.insert(filePath);
 }
 
 set<string> FuncInfo::getSrcFile() {
     return this->srcFileSet;
+}
+
+// Code Set
+set<string> FuncInfo::getCodeSet() {
+    return this->codeSet;
 }
 
 void FuncInfo::addOffsetSrc(int offset, string filePath, string line, string code, Register *reg_GPR, Register *reg_PRED, Register *reg_UGPR, Register *reg_UPRED) {

@@ -90,7 +90,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
 //            if (!offset_code.empty()) {
 //            }
 
-            FI->addSrcFile(filePath, fileLine);     //解决没有源文件情形，不知道为什么加在前面会报139错
+            FI->addSrcFile(filePath);     //解决没有源文件情形，不知道为什么加在前面会报139错
 
             int offset = hexToInt(tempStr.substr(2, tempStr.find("*/") - 2));       // 注意 find 和 find_first_of 的区别
 
@@ -322,7 +322,7 @@ map<string, FuncInfo> mapOffset(string dataPath) {
             fileLine = tempStr.substr(0, tempStr.find_first_of(" "));
 
 //            cout << "   Source File    Name: " << filePath << "       Line: " << fileLine << endl;
-            FI->addSrcFile(filePath, fileLine);
+            FI->addSrcFile(filePath);
 
             continue;
         }else if (tempStr.find("#") != tempStr.npos && tempStr.find("// |") != tempStr.npos) {
