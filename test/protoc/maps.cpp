@@ -8,30 +8,42 @@
 
 using namespace std;
 
-void decode(string serializedStr);
+
 string encode(map<string, FuncInfo> map_FI);
+google::protobuf::Map<string, kernel::mapRes_FuncInfo> decode(string serializedStr);
 void searchOffset_protobuf(kernel::mapRes::FuncInfo FI, int search_offset);
 
 int main(int argc, char* argv[]) {
 
-    init("../data/castro1.txt");
-    cout << "Test Name: " << map_FuncInfos.begin()->second.getFuncName() << endl;
-//    cout << "__cuda_sm20_div_f64_slowpath_v2: " << map_FuncInfos["__cuda_sm20_div_f64_slowpath_v2"].searchOffset(0).src_line << endl;
-
-    string serializedStr = encode(map_FuncInfos);
-
-    ofstream OsWrite("store.txt");
-    OsWrite << serializedStr;
-    OsWrite.close();
+    //init("../data/castro1.txt");
+//    init("/Users/kwok/Documents/2022_Summer/Materials/castro.txt");
+//    //init("../data/sass/darknet.1.sm_86.cubin.sass");
+//    //init("/Users/kwok/Downloads/darknet/5128d368999ad4996d79dbfe7b2d5e1a.cubin.sass");
+//    //init("/Users/kwok/Downloads/darknet/b7bf8ccc7051e900b238533ad0b74b06.cubin.sass");
+//
+//    string serializedStr = encode(map_FuncInfos);
+//
+//    ofstream OsWrite("c.txt");
+//    OsWrite << serializedStr;
+//    OsWrite.close();
 /*----------------上面是序列化，下面是反序列化-----------------------*/
     ifstream IsRead;
-    IsRead.open("store.txt");
+    IsRead.open("c1.txt");
     string strToDecode = "";
     auto ss = ostringstream{};
     ss<<IsRead.rdbuf();
     strToDecode = ss.str();
 
-    decode(strToDecode);
+    google::protobuf::Map<string, kernel::mapRes_FuncInfo> map_name_Func = decode(strToDecode);
+
+    std::map<string, kernel::mapRes_FuncInfo> std_map(map_name_Func.begin(), map_name_Func.end());
+
+    // castro1.txt
+    searchOffset_protobuf(std_map["_ZN3cub11EmptyKernelIvEEvv"], 0);
+    searchOffset_protobuf(std_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 64);
+    searchOffset_protobuf(std_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 144);
+    searchOffset_protobuf(std_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 240);
+
 
     return 0;
 }
@@ -130,12 +142,13 @@ string encode(map<string, FuncInfo> map_FI) {
     return serializedStr;
 }
 
-void decode(string serializedStr) {
+google::protobuf::Map<string, kernel::mapRes_FuncInfo> decode(string serializedStr) {
 
     //解析序列化后的消息对象，即反序列化
     kernel::mapRes deserializedMapRes;
     if(!deserializedMapRes.ParseFromString(serializedStr)){
         cerr << "Failed to parse maps." << endl;
+        exit(0);
     }
 
     cout<<"-------------上面是序列化，下面是反序列化---------------"<<endl;
@@ -181,7 +194,7 @@ void decode(string serializedStr) {
 
     // simple test
     /*
-    auto it = deserializedMapRes.testmap().find("__cuda_sm20_div_f64_slowpath_v2");
+    auto it = deserializedMapRes.testmap().find("_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_");
     if (it != deserializedMapRes.testmap().end()) {
         cout << "Func Name: " << it->second.funcname() << endl;
 
@@ -189,17 +202,39 @@ void decode(string serializedStr) {
         if (it_0 != it->second.map_offset_src().end()) {
             cout << it_0->second.src_path() << " line: " << (int)it_0->second.src_line() << endl;
             cout << it_0->second.code() << endl;
-            cout << it_0->second.reg_gpr().name() << " " << it_0->second.reg_gpr().reg_status()[1] << endl;
-            cout << it_0->second.reg_gpr().name() << " " << it_0->second.reg_gpr().size() << endl;
+            cout << it_0->second.reg_gpr().name() << " status of reg[1]:" << it_0->second.reg_gpr().reg_status()[1] << endl;
+            cout << it_0->second.reg_gpr().name() << " size:" << it_0->second.reg_gpr().size() << endl;
+
+            cout << it_0->second.reg_ugpr().name() << " size:" << it_0->second.reg_ugpr().size() << "  size of reg_status[]:" << it_0->second.reg_ugpr().reg_status().size()<< endl;
         }
     }
     */
 
-    searchOffset_protobuf(temp_map["_ZN3cub11EmptyKernelIvEEvv"], 0);
-    searchOffset_protobuf(temp_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 64);
-    searchOffset_protobuf(temp_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 144);
-    searchOffset_protobuf(temp_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 240);
+    // castro1.txt
+//    searchOffset_protobuf(temp_map["_ZN3cub11EmptyKernelIvEEvv"], 0);
+//    searchOffset_protobuf(temp_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 64);
+//    searchOffset_protobuf(temp_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 144);
+//    searchOffset_protobuf(temp_map["_ZN5amrex13launch_globalILi256EZNS_11ParallelForIiZNS_7BaseFabIiE6setValILNS_5RunOnE1EEEvRKiRKNS_3BoxENS_8DestCompENS_8NumCompsEEUliiiiE_vEENSt9enable_ifIXsr5amrex19MaybeDeviceRunnableIT0_vEE5valueEvE4typeERKNS_3Gpu10KernelInfoESA_T_OSF_EUlvE_EEvSF_"], 240);
 
+    // castro.txt
+//    searchOffset_protobuf(temp_map["__cuda_sm20_div_f64_slowpath_v2"], 64);
+
+    // darknet.1.sm_86.cubin.sass
+//    searchOffset_protobuf(temp_map["_Z27assisted_activation2_kernelfPfS_S_iii"], 912);
+//    searchOffset_protobuf(temp_map["_Z27assisted_activation2_kernelfPfS_S_iii"], 1088);
+//    searchOffset_protobuf(temp_map["_Z27assisted_activation2_kernelfPfS_S_iii"], 1584);
+
+
+    // /Users/kwok/Downloads/darknet/5128d368999ad4996d79dbfe7b2d5e1a.cubin.sass
+//    searchOffset_protobuf(temp_map["_ZN7cutlass6KernelI56cutlass_80_tensorop_s16816gemm_f16_256x64_64x3_tt_align8EEvNT_6ParamsE"], 640);    // Hex 280  LEA
+//    searchOffset_protobuf(temp_map["_ZN7cutlass6KernelI56cutlass_80_tensorop_s16816gemm_f16_256x64_64x3_tt_align8EEvNT_6ParamsE"], 656);
+//    searchOffset_protobuf(temp_map["_ZN7cutlass6KernelI56cutlass_80_tensorop_s16816gemm_f16_256x64_64x3_tt_align8EEvNT_6ParamsE"], 21008);  // Hex 5210 FSEL
+//    searchOffset_protobuf(temp_map["_ZN7cutlass6KernelI56cutlass_80_tensorop_s16816gemm_f16_256x64_64x3_tt_align8EEvNT_6ParamsE"], 21376);  // Hex 5380 FSEL
+//    searchOffset_protobuf(temp_map["_ZN7cutlass6KernelI56cutlass_80_tensorop_s16816gemm_f16_256x64_64x3_tt_align8EEvNT_6ParamsE"], 21552);  // Hex 5430 FSEL
+
+    // /Users/kwok/Downloads/darknet/b7bf8ccc7051e900b238533ad0b74b06.cubin.sass
+
+    return temp_map;
 
     google::protobuf::ShutdownProtobufLibrary();
 
@@ -259,8 +294,14 @@ void searchOffset_protobuf(kernel::mapRes::FuncInfo FI, int search_offset) {
 
             reg_GPR = SI.reg_gpr();
             if ((reg_GPR.reg_status()[reg_write] & 0x2) == 0x2) { // 2 -> 读 v, 3 -> 读+写 x     // & 0x2
-                found = true;
-                break;  // find the read line
+                vector<string> cur_code = splitCode(SI.code());
+                if (cur_code[0] == "MOV") {
+                    get_reg = vec_code[1]; // MOV R6, R2 的 R6
+                    reg_write = atoi(get_reg.substr(1).c_str());
+                } else {
+                    found = true;
+                    break;  // find the read line
+                }
             }
         }
 
@@ -278,11 +319,11 @@ void searchOffset_protobuf(kernel::mapRes::FuncInfo FI, int search_offset) {
         if (iter != AssembFunc.end()) {
             int index = distance(AssembFunc.begin(), iter);     // iter - begin
             cout << "index: " << index << endl;
-            if (index >= 28) {
+            if (index >= 31) {
                 cout << "Type is FP64" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
-            } else if (index < 28 && index >= 18) {
+            } else if (index < 31 && index >= 21) {
                 cout << "Type is FP32" << endl;
-            } else { // index < 18
+            } else { // index < 21
                 cout << "Type is INT" << endl;
             }
         } else {
@@ -329,15 +370,15 @@ void searchOffset_protobuf(kernel::mapRes::FuncInfo FI, int search_offset) {
         if (iter != AssembFunc.end()) {
             int index = distance(AssembFunc.begin(), iter);     // iter - begin
             cout << "index: " << index << endl;
-            if (index >= 28) {
+            if (index >= 31) {
                 cout << "Type is FP64" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
                 resType.type = 1;
                 resType.version = 64;
-            } else if (index < 28 && index >= 18) {
+            } else if (index < 31 && index >= 21) {
                 cout << "Type is FP32" << endl;
                 resType.type = 1;
                 resType.version = 32;
-            } else { // index < 18
+            } else { // index < 21
                 cout << "Type is INT" << endl;
                 resType.type = 0;
                 resType.version = 0;

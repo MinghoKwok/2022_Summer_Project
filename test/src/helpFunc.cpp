@@ -11,6 +11,7 @@ const vector<string> AssembFunc = {
                                     "IMADSP",
                                     "IMUL",
                                     "IADD",
+                                    "IADD3",
                                     "ISCADD",
                                     "ISAD",
                                     "IMNMX",
@@ -25,6 +26,8 @@ const vector<string> AssembFunc = {
                                     "ISETP",
                                     "ICMP",
                                     "POPC",
+                                    "LEA",
+                                    "ISCADD",
 //      the following are FP32 instructions
                                     "FFMA",
                                     "FADD",
@@ -196,15 +199,15 @@ void searchOffset(FuncInfo FI, int search_offset) {
         if (iter != AssembFunc.end()) {
             int index = distance(AssembFunc.begin(), iter);     // iter - begin
             cout << "index: " << index << endl;
-            if (index >= 28) {
+            if (index >= 31) {
                 cout << "Type is FP64" << endl;        // 类型建structure  1. char type  0-> int  1-> float  2. 几bit的类型 32-> FP32  16-> FP64      返回这个结构体
                 resType.type = 1;
                 resType.version = 64;
-            } else if (index < 28 && index >= 18) {
+            } else if (index < 31 && index >= 21) {
                 cout << "Type is FP32" << endl;
                 resType.type = 1;
                 resType.version = 32;
-            } else { // index < 18
+            } else { // index < 21
                 cout << "Type is INT" << endl;
                 resType.type = 0;
                 resType.version = 0;

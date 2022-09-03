@@ -1,5 +1,3 @@
-//test.cpp
-
 #include <iostream>
 #include <string>
 #include "student.pb.h"
